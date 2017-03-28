@@ -1,7 +1,13 @@
 image: Visual Studio 2017
+
 before_build:
     nuget restore Rest.ClientRuntime.Test/Rest.ClientRuntime.Test.sln
+
 configuration:
   - Release
+
 artifacts:
   - path: 'Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg'
+
+after-build:
+    appveyor PushArtifact Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg
