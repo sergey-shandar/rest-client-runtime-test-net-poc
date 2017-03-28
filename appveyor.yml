@@ -9,5 +9,5 @@ configuration:
 artifacts:
   - path: 'Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg'
 
-after-build:
-  - appveyor PushArtifact Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg
+after_build:
+  - ps: Get-ChildItem ./Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
