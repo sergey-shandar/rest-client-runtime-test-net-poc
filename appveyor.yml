@@ -4,4 +4,4 @@ before_build:
 configuration:
   - Release
 artifacts:
-  - path: '**\*.nupkg'
+  - path: 'Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg'
