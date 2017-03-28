@@ -10,4 +10,4 @@ artifacts:
   - path: 'Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg'
 
 after-build:
-    appveyor PushArtifact Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg
+  - appveyor PushArtifact Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg
