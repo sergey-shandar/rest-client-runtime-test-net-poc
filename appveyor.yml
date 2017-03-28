@@ -6,12 +6,5 @@ before_build:
 configuration:
   - Release
 
-assembly_info:
-  patch: true
-  file: MyVersion.cs
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}-rc1'
-
 artifacts:
   - path: 'Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg'
