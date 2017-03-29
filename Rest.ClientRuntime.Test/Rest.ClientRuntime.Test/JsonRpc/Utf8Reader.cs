@@ -22,7 +22,7 @@ namespace Rest.ClientRuntime.Test.JsonRpc
         private static string ReadAll(MemoryStream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
-            var streamReader = new StreamReader(stream, encoding: Encoding.UTF8);
+            var streamReader = new StreamReader(stream, Encoding.UTF8);
             return streamReader.ReadToEnd();
         } 
 

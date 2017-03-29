@@ -75,5 +75,17 @@ namespace Rest.ClientRuntime.Test.UnitTest.JsonRpc
             var b = r.ReadBlock(10);
             Assert.AreEqual("0123456789", b);
         }
+
+        [TestMethod]
+        public void TestReadLineAndBlockCyrillic()
+        {
+            var r = CreateReader("Content-Length: 20\r\n\nПривет мир!");
+            var s0 = r.ReadLine();
+            Assert.AreEqual("Content-Length: 20", s0);
+            var s1 = r.ReadLine();
+            Assert.AreEqual(string.Empty, s1);
+            var b = r.ReadBlock(20);
+            Assert.AreEqual("Привет мир!", b);
+        }
     }
 }
