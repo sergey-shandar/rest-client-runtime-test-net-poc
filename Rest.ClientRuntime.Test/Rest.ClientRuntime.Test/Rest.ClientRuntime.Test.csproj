@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Description>REST API Client RunTime for .Net Test (Proof of concept)</Description>
     <PackageLicenseUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc</PackageProjectUrl>
