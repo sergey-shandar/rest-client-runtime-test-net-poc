@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rest.ClientRuntime.Test.JsonRpc;
 using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.UnitTest.JsonRpc
+namespace Rest.ClientRuntime.Test.UnitTest
 {
     [TestClass]
     public class Utf8ReaderUnitTest

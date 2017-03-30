@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using Rest.ClientRuntime.Test.Rpc;
+using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Rest.ClientRuntime.Test.TextRpc
 {
-    public static class MessageEx
+    public static class StreamEx
     {
         private const string ContentLength = "Content-Length";
 
@@ -35,16 +36,22 @@ namespace Rest.ClientRuntime.Test.JsonRpc
             return reader.ReadBlock(size);
         }
 
-        public static void WriteMessage(this Stream stream, string message)
+        public static void WriteMessage(this Utf8Writer writer, string message)
         {
-            var writer = new StreamWriter(stream, Encoding.UTF8);
             var count = Encoding.UTF8.GetByteCount(message);
-            writer.Write(ContentLength);
-            writer.Write(":");
-            writer.WriteLine(count.ToString());
-            writer.WriteLine();
-            writer.Write(message);
-            writer.Flush();
+            writer
+                .Write(ContentLength)
+                .Write(":")
+                .WriteLine(count.ToString())
+                .WriteLine()
+                .Write(message);
         }
+
+        public static T ReadMessage<T>(this Utf8Reader reader, IMarshalling marshalling)
+            => marshalling.Deserialize<T>(reader.ReadMessage());
+
+        public static void WriteMessage(
+            this Utf8Writer writer, IMarshalling marshalling, object value)
+            => writer.WriteMessage(marshalling.Serialize(value) + Utf8Writer.Eol);
     }
 }
