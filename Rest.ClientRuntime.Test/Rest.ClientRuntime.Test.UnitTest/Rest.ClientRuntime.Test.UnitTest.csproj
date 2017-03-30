@@ -48,8 +48,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonRpc\MessageExUnitTest.cs" />
-    <Compile Include="JsonRpc\Utf8ReaderUnitTest.cs" />
+    <Compile Include="JsonRpc\StreamExUnitTest.cs" />
+    <Compile Include="Utf8ReaderUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteServerUnitTest.cs" />
   </ItemGroup>

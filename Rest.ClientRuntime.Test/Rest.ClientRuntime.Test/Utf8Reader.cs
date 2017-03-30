@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Rest.ClientRuntime.Test
 {
     public sealed class Utf8Reader
     {
-        private Stream _Stream;
+        private readonly Stream _Stream;
 
         private const int _NoSymbol = -1;
 
