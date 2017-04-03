@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test
+namespace Microsoft.Rest.ClientRuntime.Test
 {
     public sealed class Utf8Reader
     {
@@ -69,7 +69,7 @@ namespace Rest.ClientRuntime.Test
             {
                 _Stream.Read(buffer, offset, length);
             }
-            return Encoding.UTF8.GetString(buffer);
+            return Encoding.UTF8.GetString(buffer, offset, length);
         }
 
         private int ReadByte()

@@ -1,14 +1,16 @@
-﻿using Rest.ClientRuntime.Test.Rpc;
+﻿using Microsoft.Rest.ClientRuntime.Test.Rpc;
 using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.TextRpc
+namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
 {
     public static class StreamEx
     {
         private const string ContentLength = "Content-Length";
 
-        public static string ReadMessage(this Utf8Reader reader)
+        private const string Eol = "\n\r";
+
+        public static string ReadMessage(this StreamReader reader)
         {
             var line = reader.ReadLine();
             if (string.IsNullOrWhiteSpace(line))
@@ -33,25 +35,20 @@ namespace Rest.ClientRuntime.Test.TextRpc
             }
 
             var size = int.Parse(splitArray[1].Trim());
-            return reader.ReadBlock(size);
+            var buffer = new char[size];
+            reader.Read(buffer, 0, size);
+            return new string(buffer);
         }
 
-        public static void WriteMessage(this Utf8Writer writer, string message)
-        {
-            var count = Encoding.UTF8.GetByteCount(message);
-            writer
-                .Write(ContentLength)
-                .Write(":")
-                .WriteLine(count.ToString())
-                .WriteLine()
-                .Write(message);
-        }
-
-        public static T ReadMessage<T>(this Utf8Reader reader, IMarshalling marshalling)
+        public static T ReadMessage<T>(this StreamReader reader, IMarshalling marshalling)
             => marshalling.Deserialize<T>(reader.ReadMessage());
 
-        public static void WriteMessage(
-            this Utf8Writer writer, IMarshalling marshalling, object value)
-            => writer.WriteMessage(marshalling.Serialize(value) + Utf8Writer.Eol);
+        public static void WriteMessage(this StreamWriter writer, string message)
+        {
+            writer.Write(message);
+        }
+
+        public static void WriteMessage(this StreamWriter writer, IMarshalling marshalling, object value)
+            => writer.WriteMessage(marshalling.Serialize(value) + Eol);
     }
 }

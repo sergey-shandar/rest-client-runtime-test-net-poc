@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rest.ClientRuntime.Test.JsonRpc;
+using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
 
 namespace Rest.ClientRuntime.Test.UnitTest
 {
@@ -9,7 +9,7 @@ namespace Rest.ClientRuntime.Test.UnitTest
         [TestMethod]
         public void TestCall()
         {
-            var server = new RemoteServer();
+            //var server = new RemoteServer();
         }
     }
 }

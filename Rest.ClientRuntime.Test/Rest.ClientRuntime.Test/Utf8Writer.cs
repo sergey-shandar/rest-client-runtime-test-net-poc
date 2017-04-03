@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test
+namespace Microsoft.Rest.ClientRuntime.Test
 {
     public sealed class Utf8Writer
     {

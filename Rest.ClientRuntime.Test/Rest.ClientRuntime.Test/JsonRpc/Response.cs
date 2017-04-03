@@ -1,8 +1,12 @@
-﻿namespace Rest.ClientRuntime.Test.JsonRpc
+﻿namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
-    sealed class Response<T> : Message
+    class Response : Message
+    {
+        public Error error { get; set; }
+    }
+
+    class Response<T> : Response
     {
         public T result { get; set; }
-        public Error error { get; set; }
     }
 }

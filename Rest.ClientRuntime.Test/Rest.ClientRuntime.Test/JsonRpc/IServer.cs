@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Rest.ClientRuntime.Test.Rpc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
     public interface IServer
     {
-        Task<T> Call<T>(string method, Dictionary<string, object> @params);
+        Task Call(IMarshalling marshalling, string method, Dictionary<string, object> @params);
+
+        Task<T> Call<T>(IMarshalling marshalling, string method, Dictionary<string, object> @params);
     }
 }
