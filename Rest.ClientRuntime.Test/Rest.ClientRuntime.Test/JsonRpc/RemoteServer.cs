@@ -6,7 +6,7 @@ using System;
 
 namespace Rest.ClientRuntime.Test.JsonRpc
 {
-    public class RemoteServer : IServer
+    public sealed class RemoteServer : IServer
     {
         private readonly IMarshalling _Marshalling;
 

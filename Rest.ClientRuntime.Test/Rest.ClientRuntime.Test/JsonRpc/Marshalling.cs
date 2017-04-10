@@ -19,7 +19,9 @@ namespace Rest.ClientRuntime.Test.JsonRpc
         }
 
         public T Deserialize<T>(string value)
-            => value == null ? default(T) : SafeJsonConvert.DeserializeObject<T>(value, _DeserializerSettings);
+            => value == null 
+                ? default(T) 
+                : SafeJsonConvert.DeserializeObject<T>(value, _DeserializerSettings);
 
         public string Serialize(object value)
             => SafeJsonConvert.SerializeObject(value, _SerializerSettings);
