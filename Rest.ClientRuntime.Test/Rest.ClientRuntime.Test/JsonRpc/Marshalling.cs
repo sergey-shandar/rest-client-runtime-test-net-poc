@@ -1,5 +1,4 @@
-﻿using System;
-using Rest.ClientRuntime.Test.Rpc;
+﻿using Rest.ClientRuntime.Test.Rpc;
 using Newtonsoft.Json;
 using Microsoft.Rest.Serialization;
 
