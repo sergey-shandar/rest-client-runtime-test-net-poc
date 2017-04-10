@@ -9,7 +9,7 @@ namespace Rest.ClientRuntime.Test
 
         private const int _NoSymbol = -1;
 
-        private int _Previous = _NoSymbol;
+        private int _Cache = _NoSymbol;
 
         public Utf8Reader(Stream stream)
         {
@@ -41,7 +41,7 @@ namespace Rest.ClientRuntime.Test
                     var next = ReadByte();
                     if (!IsEol(next) || next == c)
                     {
-                        _Previous = next;
+                        _Cache = next;
                     }
                     break;
                 }
@@ -72,14 +72,18 @@ namespace Rest.ClientRuntime.Test
             return Encoding.UTF8.GetString(buffer);
         }
 
+        /// <summary>
+        /// Read a character from a stream or from a cache if it has a character.
+        /// </summary>
+        /// <returns></returns>
         private int ReadByte()
         {
-            var result = _Previous;
+            var result = _Cache;
             if (result == _NoSymbol)
             {
                 return _Stream.ReadByte();
             }
-            _Previous = _NoSymbol;
+            _Cache = _NoSymbol;
             return result;
         }
     }

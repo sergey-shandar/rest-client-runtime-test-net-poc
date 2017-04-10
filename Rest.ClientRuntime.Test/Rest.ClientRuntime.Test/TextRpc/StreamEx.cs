@@ -1,5 +1,4 @@
 ﻿using Rest.ClientRuntime.Test.Rpc;
-using System.IO;
 using System.Text;
 
 namespace Rest.ClientRuntime.Test.TextRpc

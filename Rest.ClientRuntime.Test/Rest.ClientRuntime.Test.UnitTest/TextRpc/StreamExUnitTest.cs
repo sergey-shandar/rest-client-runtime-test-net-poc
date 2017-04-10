@@ -2,7 +2,7 @@
 using Rest.ClientRuntime.Test.TextRpc;
 using System.IO;
 
-namespace Rest.ClientRuntime.Test.UnitTest.JsonRpc
+namespace Rest.ClientRuntime.Test.UnitTest.TextRpc
 {
     [TestClass]
     public class StreamExUnitTest
