@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Rest.ClientRuntime.Test.Rpc
 {
     public interface IServer
     {
