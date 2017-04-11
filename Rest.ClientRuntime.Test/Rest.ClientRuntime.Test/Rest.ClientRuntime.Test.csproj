@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc</RepositoryUrl>
     <RepositoryType />
     <Copyright>Microsoft</Copyright>
+    <SignAssembly>True</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
