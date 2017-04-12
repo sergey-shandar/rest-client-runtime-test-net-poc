@@ -7,7 +7,7 @@ namespace Rest.ClientRuntime.Test
     {
         private readonly Stream _Stream;
 
-        public const string Eol = "\n"; 
+        public const string Eol = "\r\n"; 
 
         public Utf8Writer(Stream stream)
         {

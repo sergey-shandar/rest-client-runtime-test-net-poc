@@ -3,6 +3,14 @@ using System.Text;
 
 namespace Rest.ClientRuntime.Test.TextRpc
 {
+    /// <summary>
+    /// Utilities to form and send messages in text format. The format of the message is
+    /// <code>
+    /// Content-Length: ${MessageLength}
+    /// 
+    /// ${Message}
+    /// </code>
+    /// </summary>
     public static class StreamEx
     {
         private const string ContentLength = "Content-Length";

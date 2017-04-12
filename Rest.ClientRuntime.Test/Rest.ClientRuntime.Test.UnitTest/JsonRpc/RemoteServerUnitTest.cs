@@ -33,7 +33,7 @@ namespace Rest.ClientRuntime.Test.UnitTest.JsonRpc
             var outputBuffer = Encoding.UTF8.GetString(writeStream.ToArray());
             var lines = outputBuffer.Split('\n');
             Assert.AreEqual("Content-Length", lines[0].Split(':')[0]);
-            Assert.AreEqual("", lines[1]);
+            Assert.AreEqual("\r", lines[1]);
             Assert.AreEqual('{', lines[2][0]);
         }
     }
