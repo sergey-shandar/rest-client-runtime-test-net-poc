@@ -6,24 +6,24 @@ namespace Rest.ClientRuntime.Test.JsonRpc
 {
     public sealed class Marshalling : IMarshalling
     {
-        private readonly JsonSerializerSettings _SerializerSettings;
+        public JsonSerializerSettings SerializerSettings { get; }
 
-        private readonly JsonSerializerSettings _DeserializerSettings;
+        public JsonSerializerSettings DeserializerSettings { get; }
 
         public Marshalling(
             JsonSerializerSettings serializerSettings,
             JsonSerializerSettings deserializerSettings)
         {
-            _SerializerSettings = serializerSettings;
-            _DeserializerSettings = deserializerSettings;
+            SerializerSettings = serializerSettings;
+            DeserializerSettings = deserializerSettings;
         }
 
         public T Deserialize<T>(string value)
             => value == null 
                 ? default(T) 
-                : SafeJsonConvert.DeserializeObject<T>(value, _DeserializerSettings);
+                : SafeJsonConvert.DeserializeObject<T>(value, DeserializerSettings);
 
         public string Serialize(object value)
-            => SafeJsonConvert.SerializeObject(value, _SerializerSettings);
+            => SafeJsonConvert.SerializeObject(value, SerializerSettings);
     }
 }
