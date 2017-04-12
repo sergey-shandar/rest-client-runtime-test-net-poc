@@ -25,7 +25,7 @@ namespace Rest.ClientRuntime.Test.JsonRpc
         {
             _Writer.WriteMessage(
                 _Marshalling,
-                new Request(0, method, @params);
+                new Request(0, method, @params));
             Response<T> response;
             while (true)
             {
