@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Rest.ClientRuntime.Test.Rpc;
 using Rest.ClientRuntime.Test.TextRpc;
@@ -25,11 +25,7 @@ namespace Rest.ClientRuntime.Test.JsonRpc
         {
             _Writer.WriteMessage(
                 _Marshalling,
-                new Request 
-                {
-                    method = method,
-                    @params = @params,
-                });
+                new Request(0, method, @params);
             Response<T> response;
             while (true)
             {
