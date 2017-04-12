@@ -7,19 +7,19 @@ namespace Rest.ClientRuntime.Test
     {
         private readonly Stream _Stream;
 
-        private const int _NoSymbol = -1;
+        public const int NoSymbol = -1;
 
-        private int _Cache = _NoSymbol;
+        public int Cache = NoSymbol;
 
         public Utf8Reader(Stream stream)
         {
             _Stream = stream;
         }
 
-        private static bool IsEol(int c)
+        public static bool IsEol(int c)
             => c == '\n' || c == '\r';
 
-        private static string ReadAll(MemoryStream stream)
+        public static string ReadAll(MemoryStream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
             var streamReader = new StreamReader(stream, Encoding.UTF8);
@@ -32,7 +32,7 @@ namespace Rest.ClientRuntime.Test
             while (true)
             {
                 var c = ReadByte();
-                if (c == _NoSymbol)
+                if (c == NoSymbol)
                 {
                     break;
                 }
@@ -41,7 +41,7 @@ namespace Rest.ClientRuntime.Test
                     var next = ReadByte();
                     if (!IsEol(next) || next == c)
                     {
-                        _Cache = next;
+                        Cache = next;
                     }
                     break;
                 }
@@ -59,7 +59,7 @@ namespace Rest.ClientRuntime.Test
             var buffer = new byte[length];
             var c = ReadByte();
             var offset = 0;
-            if (c != _NoSymbol)
+            if (c != NoSymbol)
             {
                 buffer[0] = (byte)c;
                 offset = 1;
@@ -76,14 +76,14 @@ namespace Rest.ClientRuntime.Test
         /// Read a character from a stream or from a cache if it has a character.
         /// </summary>
         /// <returns></returns>
-        private int ReadByte()
+        public int ReadByte()
         {
-            var result = _Cache;
-            if (result == _NoSymbol)
+            var result = Cache;
+            if (result == NoSymbol)
             {
                 return _Stream.ReadByte();
             }
-            _Cache = _NoSymbol;
+            Cache = NoSymbol;
             return result;
         }
     }
