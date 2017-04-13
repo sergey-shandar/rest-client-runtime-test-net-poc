@@ -5,19 +5,19 @@ namespace Rest.ClientRuntime.Test
 {
     public sealed class Utf8Writer
     {
-        private readonly Stream _Stream;
+        public Stream Stream { get; }
 
         public const string Eol = "\r\n"; 
 
         public Utf8Writer(Stream stream)
         {
-            _Stream = stream;
+            Stream = stream;
         }
 
         public Utf8Writer Write(string value)
         {
             var array = Encoding.UTF8.GetBytes(value);
-            _Stream.Write(array, 0, array.Length);
+            Stream.Write(array, 0, array.Length);
             return this;
         }
 

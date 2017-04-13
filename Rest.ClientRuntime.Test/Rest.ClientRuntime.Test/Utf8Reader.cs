@@ -5,15 +5,15 @@ namespace Rest.ClientRuntime.Test
 {
     public sealed class Utf8Reader
     {
-        private readonly Stream _Stream;
+        public Stream Stream { get; }
 
         public const int NoSymbol = -1;
 
-        public int Cache = NoSymbol;
+        public int Cache { get; set; } = NoSymbol;
 
         public Utf8Reader(Stream stream)
         {
-            _Stream = stream;
+            Stream = stream;
         }
 
         public static bool IsEol(int c)
@@ -67,7 +67,7 @@ namespace Rest.ClientRuntime.Test
             }
             if (0 < length)
             {
-                _Stream.Read(buffer, offset, length);
+                Stream.Read(buffer, offset, length);
             }
             return Encoding.UTF8.GetString(buffer);
         }
@@ -81,7 +81,7 @@ namespace Rest.ClientRuntime.Test
             var result = Cache;
             if (result == NoSymbol)
             {
-                return _Stream.ReadByte();
+                return Stream.ReadByte();
             }
             Cache = NoSymbol;
             return result;
