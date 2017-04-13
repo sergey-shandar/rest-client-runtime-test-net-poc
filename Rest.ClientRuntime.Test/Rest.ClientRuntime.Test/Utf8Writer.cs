@@ -26,5 +26,8 @@ namespace Rest.ClientRuntime.Test
 
         public Utf8Writer WriteLine(string value)
             => Write(value).WriteLine();
+
+        public void Flush() => 
+            Stream.Flush();
     }
 }

@@ -51,7 +51,8 @@ namespace Rest.ClientRuntime.Test.TextRpc
                 .Write(":")
                 .WriteLine(count.ToString())
                 .WriteLine()
-                .Write(message);
+                .Write(message)
+                .Flush();
         }
 
         public static T ReadMessage<T>(this Utf8Reader reader, IMarshalling marshalling)
