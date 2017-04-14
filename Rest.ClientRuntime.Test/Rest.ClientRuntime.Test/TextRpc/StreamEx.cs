@@ -1,4 +1,5 @@
 ﻿using Rest.ClientRuntime.Test.Rpc;
+using Rest.ClientRuntime.Test.Utf8;
 using System.Text;
 
 namespace Rest.ClientRuntime.Test.TextRpc
@@ -15,7 +16,7 @@ namespace Rest.ClientRuntime.Test.TextRpc
     {
         private const string ContentLength = "Content-Length";
 
-        public static string ReadMessage(this Utf8Reader reader)
+        public static string ReadMessage(this Reader reader)
         {
             var line = reader.ReadLine();
             if (string.IsNullOrWhiteSpace(line))
@@ -43,7 +44,7 @@ namespace Rest.ClientRuntime.Test.TextRpc
             return reader.ReadBlock(size);
         }
 
-        public static void WriteMessage(this Utf8Writer writer, string message)
+        public static void WriteMessage(this Writer writer, string message)
         {
             var count = Encoding.UTF8.GetByteCount(message);
             writer
@@ -55,11 +56,11 @@ namespace Rest.ClientRuntime.Test.TextRpc
                 .Flush();
         }
 
-        public static T ReadMessage<T>(this Utf8Reader reader, IMarshalling marshalling)
+        public static T ReadMessage<T>(this Reader reader, IMarshalling marshalling)
             => marshalling.Deserialize<T>(reader.ReadMessage());
 
         public static void WriteMessage(
-            this Utf8Writer writer, IMarshalling marshalling, object value)
-            => writer.WriteMessage(marshalling.Serialize(value) + Utf8Writer.Eol);
+            this Writer writer, IMarshalling marshalling, object value)
+            => writer.WriteMessage(marshalling.Serialize(value) + Writer.Eol);
     }
 }

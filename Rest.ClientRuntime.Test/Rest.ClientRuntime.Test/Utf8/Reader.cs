@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test
+namespace Rest.ClientRuntime.Test.Utf8
 {
-    public sealed class Utf8Reader
+    public sealed class Reader
     {
         public Stream Stream { get; }
 
@@ -11,7 +11,7 @@ namespace Rest.ClientRuntime.Test
 
         public int Cache { get; set; } = NoSymbol;
 
-        public Utf8Reader(Stream stream)
+        public Reader(Stream stream)
         {
             Stream = stream;
         }

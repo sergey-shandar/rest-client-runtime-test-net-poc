@@ -1,14 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rest.ClientRuntime.Test.Utf8;
 using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.UnitTest
+namespace Rest.ClientRuntime.Test.UnitTest.Utf8
 {
     [TestClass]
-    public class Utf8ReaderUnitTest
+    public class ReaderUnitTest
     {
-        private static Utf8Reader CreateReader(string source)
-            => new Utf8Reader(new MemoryStream(Encoding.UTF8.GetBytes(source)));
+        private static Reader CreateReader(string source)
+            => new Reader(new MemoryStream(Encoding.UTF8.GetBytes(source)));
 
         private static void TestReadLine(string source, string[] expectedArray)
         {

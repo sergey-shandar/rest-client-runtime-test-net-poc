@@ -1,30 +1,30 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test
+namespace Rest.ClientRuntime.Test.Utf8
 {
-    public sealed class Utf8Writer
+    public sealed class Writer
     {
         public Stream Stream { get; }
 
         public const string Eol = "\r\n"; 
 
-        public Utf8Writer(Stream stream)
+        public Writer(Stream stream)
         {
             Stream = stream;
         }
 
-        public Utf8Writer Write(string value)
+        public Writer Write(string value)
         {
             var array = Encoding.UTF8.GetBytes(value);
             Stream.Write(array, 0, array.Length);
             return this;
         }
 
-        public Utf8Writer WriteLine()
+        public Writer WriteLine()
             => Write(Eol);
 
-        public Utf8Writer WriteLine(string value)
+        public Writer WriteLine(string value)
             => Write(value).WriteLine();
 
         public void Flush() => 

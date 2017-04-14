@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TextRpc\StreamExUnitTest.cs" />
-    <Compile Include="Utf8ReaderUnitTest.cs" />
+    <Compile Include="Utf8\Utf8ReaderUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JsonRpc\RemoteServerUnitTest.cs" />
   </ItemGroup>

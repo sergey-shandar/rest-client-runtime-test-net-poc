@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Rest.ClientRuntime.Test.Rpc;
 using Rest.ClientRuntime.Test.TextRpc;
 using System;
+using Rest.ClientRuntime.Test.Utf8;
 
 namespace Rest.ClientRuntime.Test.JsonRpc
 {
@@ -10,11 +11,11 @@ namespace Rest.ClientRuntime.Test.JsonRpc
     {
         private readonly IMarshalling _Marshalling;
 
-        private readonly Utf8Reader _Reader;
+        private readonly Reader _Reader;
 
-        private readonly Utf8Writer _Writer;
+        private readonly Writer _Writer;
 
-        public RemoteServer(Utf8Reader reader, Utf8Writer writer, IMarshalling marshalling)
+        public RemoteServer(Reader reader, Writer writer, IMarshalling marshalling)
         {
             _Reader = reader;
             _Writer = writer;

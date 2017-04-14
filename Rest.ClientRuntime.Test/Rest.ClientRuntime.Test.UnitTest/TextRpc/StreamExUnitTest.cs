@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rest.ClientRuntime.Test.TextRpc;
+using Rest.ClientRuntime.Test.Utf8;
 using System.IO;
 
 namespace Rest.ClientRuntime.Test.UnitTest.TextRpc
@@ -11,10 +12,10 @@ namespace Rest.ClientRuntime.Test.UnitTest.TextRpc
         public void TestWriteReadMessage()
         {
             var stream = new MemoryStream();
-            var writer = new Utf8Writer(stream);
+            var writer = new Writer(stream);
             writer.WriteMessage("Hello world!");
             stream.Seek(0, SeekOrigin.Begin);
-            var message = new Utf8Reader(stream).ReadMessage();
+            var message = new Reader(stream).ReadMessage();
             Assert.AreEqual("Hello world!", message);
         }
     }
