@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rest.ClientRuntime.Test.Utf8;
+using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.IO;
 using System.Text;
 

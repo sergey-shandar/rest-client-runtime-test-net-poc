@@ -1,8 +1,8 @@
-﻿using Rest.ClientRuntime.Test.Rpc;
+﻿using Microsoft.Rest.ClientRuntime.Test.Rpc;
 using Newtonsoft.Json;
 using Microsoft.Rest.Serialization;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
     public sealed class Marshalling : IMarshalling
     {

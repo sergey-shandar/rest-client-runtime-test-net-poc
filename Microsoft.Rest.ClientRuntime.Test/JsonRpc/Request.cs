@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
     public sealed class Request : Message
     {

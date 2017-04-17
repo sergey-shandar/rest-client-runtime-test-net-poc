@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using Rest.ClientRuntime.Test.JsonRpc;
-using Rest.ClientRuntime.Test.Utf8;
+using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
+using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;

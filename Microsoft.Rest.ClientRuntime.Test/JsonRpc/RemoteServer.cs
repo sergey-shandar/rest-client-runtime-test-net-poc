@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Rest.ClientRuntime.Test.Rpc;
-using Rest.ClientRuntime.Test.TextRpc;
+using Microsoft.Rest.ClientRuntime.Test.Rpc;
+using Microsoft.Rest.ClientRuntime.Test.TextRpc;
 using System;
-using Rest.ClientRuntime.Test.Utf8;
+using Microsoft.Rest.ClientRuntime.Test.Utf8;
 
-namespace Rest.ClientRuntime.Test.JsonRpc
+namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
     public sealed class RemoteServer : IServer
     {

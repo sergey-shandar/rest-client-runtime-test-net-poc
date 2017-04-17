@@ -1,8 +1,8 @@
-﻿using Rest.ClientRuntime.Test.Rpc;
-using Rest.ClientRuntime.Test.Utf8;
+﻿using Microsoft.Rest.ClientRuntime.Test.Rpc;
+using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.TextRpc
+namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
 {
     /// <summary>
     /// Utilities to form and send messages in text format. The format of the message is

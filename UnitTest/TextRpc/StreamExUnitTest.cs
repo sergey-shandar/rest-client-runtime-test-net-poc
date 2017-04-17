@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rest.ClientRuntime.Test.TextRpc;
-using Rest.ClientRuntime.Test.Utf8;
+using Microsoft.Rest.ClientRuntime.Test.TextRpc;
+using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.IO;
 
 namespace Rest.ClientRuntime.Test.UnitTest.TextRpc

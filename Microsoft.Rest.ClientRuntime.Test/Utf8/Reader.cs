@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Rest.ClientRuntime.Test.Utf8
+namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
     public sealed class Reader
     {
