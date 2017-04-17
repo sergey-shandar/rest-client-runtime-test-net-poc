@@ -22,7 +22,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
             return new AzureOperationResponse<I> { Body = result };
         }
 
-        protected async Task<AzureOperationResponse<I>> Call<I>(
+        public async Task<AzureOperationResponse<I>> Call<I>(
             string method, Dictionary<string, object> @params)
             => await Call<I, I>(method, @params);
 
