@@ -13,7 +13,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
             _Server = server;
         }
 
-        protected async Task<AzureOperationResponse<I>> Call<I, C>(
+        public async Task<AzureOperationResponse<I>> Call<I, C>(
             string method, Dictionary<string, object> @params)
             where C : I
         {
