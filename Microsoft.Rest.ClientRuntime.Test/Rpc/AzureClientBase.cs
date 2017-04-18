@@ -8,11 +8,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
     {
         private readonly IServer _Server;
 
-        private readonly Credentials Credentials;
+        private readonly Credentials _Credentials;
 
         public AzureClientBase(IServer server, Credentials credentials)
         {
             _Server = server;
+            _Credentials = credentials;
         }
 
         public async Task<AzureOperationResponse<I>> Call<I, C>(
@@ -22,7 +23,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
             @params["subscriptionId"] = SubscriptionId;
             @params["__reserved"] = new Reserved
             {
-                credentials = Credentials
+                credentials = _Credentials
             };
             var result = await _Server.Call<C>("Server." + method, @params);
             return new AzureOperationResponse<I> { Body = result };
