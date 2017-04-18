@@ -8,7 +8,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
     {
         private readonly IServer _Server;
 
-        public AzureClientBase(IServer server)
+        private readonly Credentials Credentials;
+
+        public AzureClientBase(IServer server, Credentials credentials)
         {
             _Server = server;
         }
@@ -18,6 +20,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
             where C : I
         {
             @params["subscriptionId"] = SubscriptionId;
+            @params["__reserved"] = new Reserved
+            {
+                credentials = Credentials
+            };
             var result = await _Server.Call<C>("Server." + method, @params);
             return new AzureOperationResponse<I> { Body = result };
         }
