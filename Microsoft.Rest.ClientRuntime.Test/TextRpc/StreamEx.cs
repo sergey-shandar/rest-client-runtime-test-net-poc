@@ -16,7 +16,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
     {
         private const string ContentLength = "Content-Length";
 
-        public static string ReadMessage(this Reader reader)
+        public static string ReadMessage(this IReader reader)
         {
             var line = reader.ReadLine();
             if (string.IsNullOrWhiteSpace(line))
@@ -44,7 +44,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
             return reader.ReadBlock(size);
         }
 
-        public static void WriteMessage(this Writer writer, string message)
+        public static void WriteMessage(this IWriter writer, string message)
         {
             var count = Encoding.UTF8.GetByteCount(message);
             writer
@@ -56,11 +56,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
                 .Flush();
         }
 
-        public static T ReadMessage<T>(this Reader reader, IMarshalling marshalling)
+        public static T ReadMessage<T>(this IReader reader, IMarshalling marshalling)
             => marshalling.Deserialize<T>(reader.ReadMessage());
 
         public static void WriteMessage(
-            this Writer writer, IMarshalling marshalling, object value)
+            this IWriter writer, IMarshalling marshalling, object value)
             => writer.WriteMessage(marshalling.Serialize(value) + Writer.Eol);
     }
 }

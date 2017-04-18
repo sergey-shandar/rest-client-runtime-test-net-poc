@@ -12,11 +12,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
     {
         private readonly IMarshalling _Marshalling;
 
-        private readonly Reader _Reader;
+        private readonly IReader _Reader;
 
-        private readonly Writer _Writer;
+        private readonly IWriter _Writer;
 
-        public RemoteServer(Reader reader, Writer writer, IMarshalling marshalling)
+        public RemoteServer(IReader reader, IWriter writer, IMarshalling marshalling)
         {
             _Reader = reader;
             _Writer = writer;

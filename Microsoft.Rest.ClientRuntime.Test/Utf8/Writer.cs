@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
-    public sealed class Writer
+    public sealed class Writer : IWriter
     {
         public Stream Stream { get; }
 
@@ -14,18 +14,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
             Stream = stream;
         }
 
-        public Writer Write(string value)
+        public IWriter Write(string value)
         {
             var array = Encoding.UTF8.GetBytes(value);
             Stream.Write(array, 0, array.Length);
             return this;
         }
-
-        public Writer WriteLine()
-            => Write(Eol);
-
-        public Writer WriteLine(string value)
-            => Write(value).WriteLine();
 
         public void Flush() => 
             Stream.Flush();

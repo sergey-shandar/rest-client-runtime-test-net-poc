@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
-    public sealed class Reader
+    public sealed class Reader : IReader
     {
         public Stream Stream { get; }
 
