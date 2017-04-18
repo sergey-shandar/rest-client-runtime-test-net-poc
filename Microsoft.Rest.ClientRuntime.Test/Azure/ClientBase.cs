@@ -1,16 +1,17 @@
 ﻿using Microsoft.Rest.Azure;
+using Microsoft.Rest.ClientRuntime.Test.Rpc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Rest.ClientRuntime.Test.Rpc
+namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public abstract class AzureClientBase
+    public abstract class ClientBase
     {
         private readonly IServer _Server;
 
         private readonly Credentials _Credentials;
 
-        public AzureClientBase(IServer server, Credentials credentials)
+        public ClientBase(IServer server, Credentials credentials)
         {
             _Server = server;
             _Credentials = credentials;
