@@ -4,6 +4,7 @@ using Microsoft.Rest.ClientRuntime.Test.Rpc;
 using Microsoft.Rest.ClientRuntime.Test.TextRpc;
 using System;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
+using System.Diagnostics;
 
 namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
@@ -20,6 +21,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
             _Reader = reader;
             _Writer = writer;
             _Marshalling = marshalling;
+        }
+
+        public RemoteServer(Process process, Marshalling marshalling):
+            this(
+                new Reader(process.StandardOutput.BaseStream),
+                new Writer(process.StandardInput.BaseStream),
+                marshalling)
+        {
         }
 
         public async Task<T> Call<T>(string method, Dictionary<string, object> @params)
