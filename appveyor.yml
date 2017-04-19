@@ -9,3 +9,4 @@ build:
   verbosity: minimal
 artifacts:
 - path: Microsoft.Rest.ClientRuntime.Test/bin/Debug/Microsoft.Rest.ClientRuntime.Test.*.nupkg
+- path: Microsoft.Rest.ClientRuntime.Test/bin/Debug/**/*.pdb
