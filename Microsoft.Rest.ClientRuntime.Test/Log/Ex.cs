@@ -10,8 +10,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Log
         public static Action<string> ToLog(this Stream stream)
             => v =>
             {
-                var array = Encoding.UTF8.GetBytes(v);
-                stream.Write(array, 0, array.Length);
+                stream.Write(Encoding.UTF8.GetBytes(v));
+                stream.Flush();
             };
 
         public static Io WithLog(this Io io, Action<string> log)
