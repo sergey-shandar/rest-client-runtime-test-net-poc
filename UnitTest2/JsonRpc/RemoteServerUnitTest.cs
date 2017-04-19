@@ -24,7 +24,7 @@ namespace Rest.ClientRuntime.Test.UnitTest.JsonRpc
             var reader = new Reader(new MemoryStream(Encoding.UTF8.GetBytes(response)));
             var writeStream = new MemoryStream();
             var writer = new Writer(writeStream);
-            var server = new RemoteServer(reader, writer, marshalling);
+            var server = new RemoteServer(new Io(reader, writer), marshalling);
 
             var @params = new Dictionary<string, object>();
             var result = await server.Call<string>("somemethod", @params);

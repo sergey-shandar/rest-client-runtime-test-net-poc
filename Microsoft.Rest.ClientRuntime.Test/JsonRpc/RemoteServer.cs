@@ -5,6 +5,8 @@ using Microsoft.Rest.ClientRuntime.Test.TextRpc;
 using System;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.Diagnostics;
+using System.IO;
+using Microsoft.Rest.ClientRuntime.Test.Log;
 
 namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
@@ -12,34 +14,33 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
     {
         private readonly IMarshalling _Marshalling;
 
-        private readonly IReader _Reader;
+        private readonly Io _Io;
 
-        private readonly IWriter _Writer;
-
-        public RemoteServer(IReader reader, IWriter writer, IMarshalling marshalling)
+        public RemoteServer(Io io, IMarshalling marshalling)
         {
-            _Reader = reader;
-            _Writer = writer;
+            _Io = io;
             _Marshalling = marshalling;
         }
 
         public RemoteServer(Process process, Marshalling marshalling):
-            this(
-                new Reader(process.StandardOutput.BaseStream),
-                new Writer(process.StandardInput.BaseStream),
-                marshalling)
+            this(process.CreateIo(), marshalling)
+        {
+        }
+
+        public RemoteServer(Process process, Stream log, Marshalling marshalling) :
+            this(process.CreateIo().WithLog(log), marshalling)
         {
         }
 
         public async Task<T> Call<T>(string method, Dictionary<string, object> @params)
         {
-            _Writer.WriteMessage(
+            _Io.Writer.WriteMessage(
                 _Marshalling,
                 new Request(0, method, @params));
             Response<T> response;
             while (true)
             {
-                response = _Reader.ReadMessage<Response<T>>(_Marshalling);
+                response = _Io.Reader.ReadMessage<Response<T>>(_Marshalling);
                 if (response != null)
                 {
                     break;

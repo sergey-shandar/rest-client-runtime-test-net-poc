@@ -16,8 +16,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 
         public IWriter Write(string value)
         {
-            var array = Encoding.UTF8.GetBytes(value);
-            Stream.Write(array, 0, array.Length);
+            Stream.Write(Encoding.UTF8.GetBytes(value));
             return this;
         }
 

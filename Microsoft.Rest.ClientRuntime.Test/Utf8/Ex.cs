@@ -7,6 +7,5 @@
 
         public static IWriter WriteLine(this IWriter writer, string value)
             => writer.Write(value).WriteLine();
-
     }
 }
