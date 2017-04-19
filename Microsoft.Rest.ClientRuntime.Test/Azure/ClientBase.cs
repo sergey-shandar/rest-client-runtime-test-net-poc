@@ -26,8 +26,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             {
                 credentials = _Credentials
             };
-            var result = await _Server.Call<C>("Server." + method, @params);
-            return new AzureOperationResponse<I> { Body = result };
+            var result = await _Server.Call<Result<C>>("Server." + method, @params);
+            return new AzureOperationResponse<I> { Body = result.respose };
         }
 
         public async Task<AzureOperationResponse<I>> Call<I>(
