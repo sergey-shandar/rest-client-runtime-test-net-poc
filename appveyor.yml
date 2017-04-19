@@ -1,6 +1,6 @@
 version: 1.0.{build}
 image: Visual Studio 2017
-configuration: Release
+configuration: Debug
 nuget:
   disable_publish_on_pr: true
 before_build:
@@ -8,4 +8,4 @@ before_build:
 build:
   verbosity: minimal
 artifacts:
-- path: Microsoft.Rest.ClientRuntime.Test/bin/Release/Microsoft.Rest.ClientRuntime.Test.*.nupkg
+- path: Microsoft.Rest.ClientRuntime.Test/bin/Debug/Microsoft.Rest.ClientRuntime.Test.*.nupkg
