@@ -67,7 +67,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
             }
             if (0 < length)
             {
-                Stream.Read(buffer, offset, length);
+                Stream.ReadBuffer(buffer, offset, length);
             }
             return Encoding.UTF8.GetString(buffer);
         }
