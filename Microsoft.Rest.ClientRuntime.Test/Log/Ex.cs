@@ -1,7 +1,6 @@
 ﻿using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System;
 using System.IO;
-using System.Text;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Log
 {
@@ -10,7 +9,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Log
         public static Action<string> ToLog(this Stream stream)
             => v =>
             {
-                stream.Write(Encoding.UTF8.GetBytes(v));
+                stream.WriteUtf8(v);
                 stream.Flush();
             };
 

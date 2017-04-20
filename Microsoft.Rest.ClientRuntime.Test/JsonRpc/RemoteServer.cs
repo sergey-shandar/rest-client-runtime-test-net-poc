@@ -16,6 +16,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 
         private readonly Io _Io;
 
+        private long i = 0;
+
         public RemoteServer(Io io, IMarshalling marshalling)
         {
             _Io = io;
@@ -36,7 +38,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
         {
             _Io.Writer.WriteMessage(
                 _Marshalling,
-                new Request(0, method, @params));
+                new Request(i.ToString(), method, @params));
+            ++i;
             Response<T> response;
             while (true)
             {

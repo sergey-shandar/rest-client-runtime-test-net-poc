@@ -5,7 +5,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
         public T result { get; set; }
         public Error error { get; set; }
 
-        public Response(int id, T result, Error error): base(id)
+        public Response(string id, T result, Error error): base(id)
         {
             this.result = result;
             this.error = error;
