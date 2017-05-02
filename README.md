@@ -73,9 +73,9 @@ The Azure Test Framework Protocol using JSON-RPC to call Azure SDK functions.
 
 ## 2.1. Operation Mapping
 
-|Swagger Operation Id|JSON-RPC method|
-|--------------------|---------------|
-|`B_C`               |`Server.A_B_C` |
+|Title|Swagger Operation Id|JSON-RPC method|
+|-----|--------------------|---------------|
+|`A`  |`B_C`               |`A.B_C`        |
 
 ## 2.2. Reserved Parameters
 
