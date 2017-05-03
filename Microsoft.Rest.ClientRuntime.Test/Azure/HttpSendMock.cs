@@ -46,7 +46,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         {
             var method = request.Method.Method;
             var paramsStr = request.Content.AsString();
-            using (var writer = File.AppendText("mock.log"))
+            using (var writer = File.AppendText(@"C:\projects\azure-rest-api-specs-tests\mock.log"))
             {
                 writer.WriteLine(method);
                 writer.WriteLine(paramsStr);
