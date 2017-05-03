@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Rest.ClientRuntime.Test.Rpc
+﻿namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     sealed class Reserved
     {

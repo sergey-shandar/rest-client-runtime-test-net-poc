@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
+using Microsoft.Rest.ClientRuntime.Test.Rpc;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
@@ -14,7 +15,6 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         private static Lazy<Io> _Io = new Lazy<Io>(() =>
         {
-            var serverPath = Environment.GetEnvironmentVariable("SDK_REMOTE_SERVER");
             var processInfo = new ProcessStartInfo
             {
                 FileName = Environment.GetEnvironmentVariable("SDK_REMOTE_SERVER"),
@@ -46,15 +46,22 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         {
             var method = request.Method.Method;
             var paramsStr = request.Content.AsString();
-            var @params = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramsStr);
             using (var writer = File.AppendText("mock.log"))
             {
                 writer.WriteLine(method);
                 writer.WriteLine(paramsStr);
             }
+            var @params = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramsStr);
+            @params["__reserved"] = new Reserved
+            {
+                credentials = new Credentials { }
+            };
             var remoteServer = new RemoteServer(_Io.Value, new Marshalling(null, null));
-            var response = await remoteServer.Call<JsonToken>(request.Method.Method, @params);
-            return null;
+            var response = await remoteServer.Call<Result<object>>(request.Method.Method, @params);
+            return new HttpResponseMessage(response.statusCode)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(response.response))
+            };
         }
     }
 }
