@@ -93,10 +93,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
 
             Result<object> response;
-            using (var process = StartProcess())
+            using(var process = StartProcess())
             {
                 var remoteServer = new RemoteServer(process.CreateIo(), new Marshalling(null, null));
                 response = await remoteServer.Call<Result<object>>(request.Method.Method, @params);
+                process.Kill();
             }            
             
             return new HttpResponseMessage(response.statusCode)
