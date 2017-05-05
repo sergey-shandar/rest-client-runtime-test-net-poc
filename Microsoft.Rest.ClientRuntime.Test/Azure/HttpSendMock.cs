@@ -28,6 +28,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 FileName = processName,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
+                UseShellExecute = false,
             };
 
             var process = new Process { StartInfo = processInfo };
@@ -41,6 +42,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             }
             return process.CreateIo();
         });
+
+        private static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
+            => array.First(s => s.Item1 == key).Item2;
 
         /// <summary>
         /// TODO:
@@ -69,21 +73,22 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var connectionString = Environment.GetEnvironmentVariable("TEST_CSM_ORGID_AUTHENTICATION");
             var split = connectionString
                 .Split(';')
-                .Select(s => {
+                .SelectMany(s => {
                     var p = s.IndexOf('=');
                     return p <= 0 
-                        ? Tuple.Create(string.Empty, string.Empty)
-                        : Tuple.Create(s.Substring(0, p), s.Substring(p + 1));
-                });
+                        ? new Tuple<string, string>[] { }
+                        : new[] { Tuple.Create(s.Substring(0, p), s.Substring(p + 1)) };
+                })
+                .ToArray();
 
             var @params = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramsStr);
             @params["__reserved"] = new Reserved
             {
                 credentials = new Credentials
                 {
-                    clientId = split.First(s => s.Item1 == "ServicePrincipal").Item2,
-                    tenantId = split.First(s => s.Item1 == "AADTenant").Item2,
-                    secret = split.First(s => s.Item1 == "ServicePrincipalSecret").Item2,
+                    clientId = GetValue(split, "ServicePrincipal"),
+                    tenantId = GetValue(split, "AADTenant"),
+                    secret = GetValue(split, "ServicePrincipalSecret"),
                 }
             };
             var remoteServer = new RemoteServer(_Io.Value, new Marshalling(null, null));

@@ -15,7 +15,10 @@ namespace UnitTest2.Azure
         {
             var location = typeof(Program).Assembly.Location;
             Environment.SetEnvironmentVariable(HttpSendMock.SdkRemoteServer, location);
-            await HttpSendMock.SendAsync(new HttpRequestMessage());
+            await HttpSendMock.SendAsync(new HttpRequestMessage()
+            {
+                Content = new StringContent("{}"),
+            });
         }
     }
 }
