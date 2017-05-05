@@ -71,7 +71,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             // for example:
             // "SubscriptionId=...;ServicePrincipal=...;ServicePrincipalSecret=...;AADTenant=...;"
             var connectionString = Environment.GetEnvironmentVariable("TEST_CSM_ORGID_AUTHENTICATION");
-            var split = connectionString
+            var split = (connectionString ?? string.Empty)
                 .Split(';')
                 .SelectMany(s => {
                     var p = s.IndexOf('=');
