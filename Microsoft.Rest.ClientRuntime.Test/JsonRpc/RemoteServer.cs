@@ -51,7 +51,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
             }
             if (response.error != null)
             {
-                throw new Exception(response.error.message);
+                throw new ErrorException(method, response.error);
             }
             return response.result;
         }
