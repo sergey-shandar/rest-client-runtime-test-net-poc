@@ -5,7 +5,7 @@ using System.Text;
 namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
 {
     /// <summary>
-    /// Utilities to form and send messages in text format. The format of the message is
+    /// Utilities to form and send messages in a text format. The format of the messages is
     /// <code>
     /// Content-Length: ${MessageLength}
     /// 

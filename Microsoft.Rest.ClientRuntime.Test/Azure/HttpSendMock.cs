@@ -15,9 +15,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         private static Lazy<Io> _Io = new Lazy<Io>(() =>
         {
+            var processName = Environment.GetEnvironmentVariable("SDK_REMOTE_SERVER");
+            if (string.IsNullOrWhiteSpace(processName))
+            {
+                throw new Exception("SDK_REMOTE_SERVER is not specified.");
+            }
+
             var processInfo = new ProcessStartInfo
             {
-                FileName = Environment.GetEnvironmentVariable("SDK_REMOTE_SERVER"),
+                FileName = processName,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
             };
