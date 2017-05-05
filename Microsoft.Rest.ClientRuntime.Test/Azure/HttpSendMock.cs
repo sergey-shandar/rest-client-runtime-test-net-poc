@@ -15,7 +15,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         public const string SdkRemoteServer = "SDK_REMOTE_SERVER";
 
-        private static Lazy<Tuple<Process, Io>> _Io = new Lazy<Tuple<Process, Io>>(() =>
+        private static Process StartProcess()
         {
             var processName = Environment.GetEnvironmentVariable(SdkRemoteServer);
             if (string.IsNullOrWhiteSpace(processName))
@@ -40,8 +40,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             {
                 throw new Exception($"Can't start the server {processName}: {e.Message}", e);
             }
-            return Tuple.Create(process, process.CreateIo());
-        });
+            return process;
+        }
 
         private static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
             => array.FirstOrDefault(s => s.Item1 == key)?.Item2;
@@ -91,9 +91,13 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                     secret = GetValue(split, "ServicePrincipalSecret"),
                 }
             };
-            var pr = _Io.Value;
-            var remoteServer = new RemoteServer(pr.Item2, new Marshalling(null, null));
-            var response = await remoteServer.Call<Result<object>>(request.Method.Method, @params);
+
+            Result<object> response;
+            using (var process = StartProcess())
+            {
+                var remoteServer = new RemoteServer(process.CreateIo(), new Marshalling(null, null));
+                response = await remoteServer.Call<Result<object>>(request.Method.Method, @params);
+            }            
             
             return new HttpResponseMessage(response.statusCode)
             {
