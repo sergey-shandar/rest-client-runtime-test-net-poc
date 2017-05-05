@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 1.0.200.{build}
 image: Visual Studio 2017
 configuration: Debug
 nuget:
@@ -9,4 +9,3 @@ build:
   verbosity: minimal
 artifacts:
 - path: Microsoft.Rest.ClientRuntime.Test/bin/Debug/Microsoft.Rest.ClientRuntime.Test.*.nupkg
-- path: Microsoft.Rest.ClientRuntime.Test/bin/Debug/**/*.pdb
