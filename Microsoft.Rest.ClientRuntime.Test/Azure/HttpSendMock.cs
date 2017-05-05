@@ -13,12 +13,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public static class HttpSendMock
     {
+        public const string SdkRemoteServer = "SDK_REMOTE_SERVER";
+
         private static Lazy<Io> _Io = new Lazy<Io>(() =>
         {
-            var processName = Environment.GetEnvironmentVariable("SDK_REMOTE_SERVER");
+            var processName = Environment.GetEnvironmentVariable(SdkRemoteServer);
             if (string.IsNullOrWhiteSpace(processName))
             {
-                throw new Exception("SDK_REMOTE_SERVER is not specified.");
+                throw new Exception($"{SdkRemoteServer} is not specified.");
             }
 
             var processInfo = new ProcessStartInfo
@@ -55,7 +57,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             //
             var method = request.Method.Method;
             var paramsStr = request.Content.AsString();
-            using (var writer = File.AppendText(@"C:\projects\azure-rest-api-specs-tests\mock.log"))
+            using (var writer = File.AppendText(@"mock.log"))
             {
                 writer.WriteLine(method);
                 writer.WriteLine(paramsStr);
