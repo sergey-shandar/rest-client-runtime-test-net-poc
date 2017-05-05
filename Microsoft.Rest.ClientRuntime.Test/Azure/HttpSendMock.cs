@@ -44,7 +44,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         });
 
         private static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
-            => array.First(s => s.Item1 == key).Item2;
+            => array.FirstOrDefault(s => s.Item1 == key)?.Item2;
 
         /// <summary>
         /// TODO:
