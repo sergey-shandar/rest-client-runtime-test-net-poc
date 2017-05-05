@@ -29,7 +29,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
 
             var process = new Process { StartInfo = processInfo };
-            process.Start();
+            try
+            {
+                process.Start();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Can't start the server {processName}: {e.Message}", e);
+            }
             return process.CreateIo();
         });
 
