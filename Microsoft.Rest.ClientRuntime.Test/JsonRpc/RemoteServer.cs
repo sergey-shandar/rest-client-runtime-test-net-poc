@@ -36,9 +36,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 
         public async Task<T> Call<T>(string method, Dictionary<string, object> @params)
         {
-            _Io.Writer.WriteMessage(
-                _Marshalling,
-                new Request(i.ToString(), method, @params));
+            var request = new Request(i.ToString(), method, @params);
+            _Io.Writer.WriteMessage(_Marshalling, request);
             ++i;
             Response<T> response;
             while (true)
@@ -51,7 +50,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
             }
             if (response.error != null)
             {
-                throw new ErrorException(method, response.error);
+                throw new ErrorException(method, _Marshalling.Serialize(request), response.error);
             }
             return response.result;
         }
