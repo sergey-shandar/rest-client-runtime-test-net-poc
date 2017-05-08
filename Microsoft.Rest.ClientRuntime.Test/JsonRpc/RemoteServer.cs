@@ -50,6 +50,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
             }
             if (response.error != null)
             {
+                request.@params.Remove("__reserved");
                 throw new ErrorException(method, _Marshalling.Serialize(request), response.error);
             }
             return response.result;
