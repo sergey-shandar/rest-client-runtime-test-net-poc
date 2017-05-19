@@ -15,7 +15,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         public const string SdkRemoteServer = "SDK_REMOTE_SERVER";
 
-        private static Process StartProcess()
+        public static Process StartProcess()
         {
             var processName = Environment.GetEnvironmentVariable(SdkRemoteServer);
             if (string.IsNullOrWhiteSpace(processName))
@@ -43,7 +43,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             return process;
         }
 
-        private static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
+        public static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
             => array.FirstOrDefault(s => s.Item1 == key)?.Item2;
 
         /// <summary>
