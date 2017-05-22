@@ -1,9 +1,11 @@
-﻿namespace Microsoft.Rest.ClientRuntime.Test.Utf8
+﻿using System.Threading.Tasks;
+
+namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
     public interface IReader
     {
-        string ReadLine();
+        Task<string> ReadLineAsync();
 
-        string ReadBlock(int length);
+        Task<string> ReadBlockAsync(int length);
     }
 }

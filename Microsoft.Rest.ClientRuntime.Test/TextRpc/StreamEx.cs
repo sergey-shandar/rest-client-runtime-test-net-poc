@@ -1,6 +1,7 @@
 ﻿using Microsoft.Rest.ClientRuntime.Test.Rpc;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
 {
@@ -16,9 +17,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
     {
         private const string ContentLength = "Content-Length";
 
-        public static string ReadMessage(this IReader reader)
+        public static async Task<string> ReadMessageAsync(this IReader reader)
         {
-            var line = reader.ReadLine();
+            var line = await reader.ReadLineAsync();
             if (string.IsNullOrWhiteSpace(line))
             {
                 return null;
@@ -33,7 +34,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
             // read until the first empty line.
             while (true)
             {
-                var line2 = reader.ReadLine();
+                var line2 = await reader.ReadLineAsync();
                 if (line2.Trim() == string.Empty)
                 {
                     break;
@@ -41,26 +42,25 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
             }
 
             var size = int.Parse(splitArray[1].Trim());
-            return reader.ReadBlock(size);
+            return await reader.ReadBlockAsync(size);
         }
 
-        public static void WriteMessage(this IWriter writer, string message)
+        public static async Task WriteMessageAsync(this IWriter writer, string message)
         {
             var count = Encoding.UTF8.GetByteCount(message);
-            writer
-                .Write(ContentLength)
-                .Write(":")
-                .WriteLine(count.ToString())
-                .WriteLine()
-                .Write(message)
-                .Flush();
+            await writer.WriteAsync(ContentLength);
+            await writer.WriteAsync(":");
+            await writer.WriteLineAsync(count.ToString());
+            await writer.WriteLineAsync();
+            await writer.WriteAsync(message);
+            await writer.FlushAsync();
         }
 
-        public static T ReadMessage<T>(this IReader reader, IMarshalling marshalling)
-            => marshalling.Deserialize<T>(reader.ReadMessage());
+        public static async Task<T> ReadMessageAsync<T>(this IReader reader, IMarshalling marshalling)
+            => marshalling.Deserialize<T>(await reader.ReadMessageAsync());
 
-        public static void WriteMessage(
+        public static Task WriteMessageAsync(
             this IWriter writer, IMarshalling marshalling, object value)
-            => writer.WriteMessage(marshalling.Serialize(value) + Writer.Eol);
+            => writer.WriteMessageAsync(marshalling.Serialize(value) + Writer.Eol);
     }
 }

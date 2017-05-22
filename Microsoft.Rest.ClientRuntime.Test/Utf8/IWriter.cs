@@ -1,8 +1,11 @@
-﻿namespace Microsoft.Rest.ClientRuntime.Test.Utf8
+﻿using System.Threading.Tasks;
+
+namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
     public interface IWriter
     {
-        IWriter Write(string value);
-        void Flush();
+        Task WriteAsync(string value);
+
+        Task FlushAsync();
     }
 }

@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rest.ClientRuntime.Test.UnitTest.JsonRpc
+namespace UnitTest2.JsonRpc
 {
     [TestClass]
     public class RemoteServerUnitTest

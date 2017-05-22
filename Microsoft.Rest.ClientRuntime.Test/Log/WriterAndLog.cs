@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Log
 {
@@ -8,9 +9,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Log
     {
         private readonly IWriter _Writer;
 
-        private Action<string> _Log;
+        private Func<string, Task> _Log;
 
-        public WriterAndLog(IWriter writer, Action<string> log)
+        public WriterAndLog(IWriter writer, Func<string, Task> log)
         {
             _Writer = writer;
             _Log = log;
@@ -20,16 +21,13 @@ namespace Microsoft.Rest.ClientRuntime.Test.Log
         {
         }
 
-        public void Flush()
-        {
-            _Writer.Flush();
-        }
+        public Task FlushAsync()
+            => _Writer.FlushAsync();
 
-        public IWriter Write(string value)
+        public async Task WriteAsync(string value)
         {
-            _Log(value);
-            _Writer.Write(value);
-            return this;
+            await _Log(value);
+            await _Writer.WriteAsync(value);
         }
     }
 }

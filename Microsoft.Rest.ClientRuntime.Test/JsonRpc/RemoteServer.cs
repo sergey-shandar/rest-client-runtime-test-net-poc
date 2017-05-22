@@ -37,12 +37,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
         public async Task<T> Call<T>(string method, Dictionary<string, object> @params)
         {
             var request = new Request(i.ToString(), method, @params);
-            _Io.Writer.WriteMessage(_Marshalling, request);
+            await _Io.Writer.WriteMessageAsync(_Marshalling, request);
             ++i;
             Response<T> response;
             while (true)
             {
-                response = _Io.Reader.ReadMessage<Response<T>>(_Marshalling);
+                response = await _Io.Reader.ReadMessageAsync<Response<T>>(_Marshalling);
                 if (response != null)
                 {
                     break;

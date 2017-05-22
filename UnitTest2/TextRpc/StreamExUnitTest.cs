@@ -2,20 +2,21 @@
 using Microsoft.Rest.ClientRuntime.Test.TextRpc;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.IO;
+using System.Threading.Tasks;
 
-namespace Rest.ClientRuntime.Test.UnitTest.TextRpc
+namespace UnitTest2.TextRpc
 {
     [TestClass]
     public class StreamExUnitTest
     {
         [TestMethod]
-        public void TestWriteReadMessage()
+        public async Task TestWriteReadMessage()
         {
             var stream = new MemoryStream();
             var writer = new Writer(stream);
-            writer.WriteMessage("Hello world!");
+            await writer.WriteMessageAsync("Hello world!");
             stream.Seek(0, SeekOrigin.Begin);
-            var message = new Reader(stream).ReadMessage();
+            var message = await new Reader(stream).ReadMessageAsync();
             Assert.AreEqual("Hello world!", message);
         }
     }

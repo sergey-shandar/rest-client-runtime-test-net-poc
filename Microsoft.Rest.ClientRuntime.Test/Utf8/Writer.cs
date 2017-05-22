@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
@@ -14,13 +14,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
             Stream = stream;
         }
 
-        public IWriter Write(string value)
-        {
-            Stream.WriteUtf8(value);
-            return this;
-        }
+        public Task WriteAsync(string value)
+            => Stream.WriteUtf8Async(value);
 
-        public void Flush() => 
-            Stream.Flush();
+        public Task FlushAsync()
+            => Stream.FlushAsync();
     }
 }

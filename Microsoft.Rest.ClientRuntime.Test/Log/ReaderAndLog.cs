@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Log
 {
@@ -8,9 +9,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Log
     {
         private readonly IReader _Reader;
 
-        private readonly Action<string> _Log;
+        private readonly Func<string, Task> _Log;
 
-        public ReaderAndLog(IReader reader, Action<string> log)
+        public ReaderAndLog(IReader reader, Func<string, Task> log)
         {
             _Reader = reader;
             _Log = log;
@@ -20,17 +21,17 @@ namespace Microsoft.Rest.ClientRuntime.Test.Log
         { 
         }
 
-        public string ReadBlock(int length)
+        public async Task<string> ReadBlockAsync(int length)
         {
-            var result = _Reader.ReadBlock(length);
-            _Log(result);
+            var result = await _Reader.ReadBlockAsync(length);
+            await _Log(result);
             return result;
         }
 
-        public string ReadLine()
+        public async Task<string> ReadLineAsync()
         {
-            var result = _Reader.ReadLine();
-            _Log(result + Writer.Eol);
+            var result = await _Reader.ReadLineAsync();
+            await _Log(result + Writer.Eol);
             return result;
         }
     }

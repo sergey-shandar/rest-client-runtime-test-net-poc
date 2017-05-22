@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Utf8
 {
@@ -24,21 +26,36 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
             stream.Seek(0, SeekOrigin.Begin);
             var streamReader = new StreamReader(stream, Encoding.UTF8);
             return streamReader.ReadToEnd();
-        } 
+        }
 
-        public string ReadLine()
+        /// <summary>
+        /// Read a character from a stream or from a cache if it has a character.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> ReadByteAsync()
+        {
+            var result = Cache;
+            if (result == NoSymbol)
+            {
+                return await Stream.ReadByteAsync();
+            }
+            Cache = NoSymbol;
+            return result;
+        }
+
+        public async Task<string> ReadLineAsync()
         {
             var result = new MemoryStream();
             while (true)
             {
-                var c = ReadByte();
+                var c = await ReadByteAsync();
                 if (c == NoSymbol)
                 {
                     break;
                 }
                 if (IsEol(c))
                 {
-                    var next = ReadByte();
+                    var next = await ReadByteAsync();
                     if (!IsEol(next) || next == c)
                     {
                         Cache = next;
@@ -50,14 +67,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
             return ReadAll(result);
         }
 
-        public string ReadBlock(int length)
+        public async Task<string> ReadBlockAsync(int length)
         {
             if (length <= 0)
             {
                 return string.Empty;
             }
             var buffer = new byte[length];
-            var c = ReadByte();
+            var c = await ReadByteAsync();
             var offset = 0;
             if (c != NoSymbol)
             {
@@ -67,24 +84,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Utf8
             }
             if (0 < length)
             {
-                Stream.ReadBuffer(buffer, offset, length);
+                await Stream.ReadBufferAsync(buffer, offset, length);
             }
             return Encoding.UTF8.GetString(buffer);
-        }
-
-        /// <summary>
-        /// Read a character from a stream or from a cache if it has a character.
-        /// </summary>
-        /// <returns></returns>
-        public int ReadByte()
-        {
-            var result = Cache;
-            if (result == NoSymbol)
-            {
-                return Stream.ReadByte();
-            }
-            Cache = NoSymbol;
-            return result;
         }
     }
 }
