@@ -2,7 +2,7 @@
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public class AzureOperation<Response>
+    public class AzureRequest
     {
         public string Title { get; }
 
@@ -12,7 +12,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public IEnumerable<AzureParam> ParamList { get; }
 
-        public AzureOperation(
+        public AzureRequest(
             string title,
             string id,
             string subscriptionId,

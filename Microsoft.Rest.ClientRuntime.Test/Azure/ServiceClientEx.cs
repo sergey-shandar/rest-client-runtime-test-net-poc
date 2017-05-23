@@ -7,7 +7,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public static class ServiceClientEx
     {
-        public static async Task<AzureOperationResponse<R>> Call<T, R>(this T client, AzureOperation<R> operation)
+        public static async Task<AzureOperationResponse<R>> Call<T, R>(this T client, AzureRequest operation, Tag<R> _)
             where T : ServiceClient<T>, IAzureClient
         {
             var @params = new Dictionary<string, object>();
@@ -21,6 +21,13 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             {
                 Body = response.result
             };
+        }
+
+        public static async Task<AzureOperationResponse> Call<T>(this T client, AzureRequest operation)
+            where T : ServiceClient<T>, IAzureClient
+        {
+            await client.Call(operation, new Tag<object>());
+            return new AzureOperationResponse();
         }
     }
 }
