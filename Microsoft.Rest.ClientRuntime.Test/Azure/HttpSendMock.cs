@@ -6,7 +6,6 @@ using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
 using System;
 using System.IO;
 using System.Diagnostics;
-using Microsoft.Rest.ClientRuntime.Test.Utf8;
 using System.Linq;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
@@ -46,6 +45,46 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         public static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
             => array.FirstOrDefault(s => s.Item1 == key)?.Item2;
 
+        public static async Task<R> RemoteServerCall<R>(string method, Dictionary<string, object> @params)
+        {
+            // Parse Connection String
+            // for example:
+            // "SubscriptionId=...;ServicePrincipal=...;ServicePrincipalSecret=...;AADTenant=...;"
+            var connectionString = Environment.GetEnvironmentVariable("TEST_CSM_ORGID_AUTHENTICATION");
+            var split = (connectionString ?? string.Empty)
+                .Split(';')
+                .SelectMany(s => {
+                    var p = s.IndexOf('=');
+                    return p <= 0
+                        ? new Tuple<string, string>[] { }
+                        : new[] { Tuple.Create(s.Substring(0, p), s.Substring(p + 1)) };
+                })
+                .ToArray();
+
+            @params["__reserved"] = new Reserved
+            {
+                credentials = new Credentials
+                {
+                    clientId = GetValue(split, "ServicePrincipal"),
+                    tenantId = GetValue(split, "AADTenant"),
+                    secret = GetValue(split, "ServicePrincipalSecret"),
+                }
+            };
+
+            using (var process = StartProcess())
+            {
+                try
+                {
+                    var remoteServer = new RemoteServer(process.CreateIo(), new Marshalling(null, null));
+                    return await remoteServer.Call<R>(method, @params);
+                }
+                finally
+                {
+                    process.Kill();
+                }
+            }
+        }
+
         /// <summary>
         /// TODO:
         ///     - ask Joel to have encrypted credentials
@@ -67,44 +106,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 writer.WriteLine(paramsStr);
             }
 
-            // Parse Connection String
-            // for example:
-            // "SubscriptionId=...;ServicePrincipal=...;ServicePrincipalSecret=...;AADTenant=...;"
-            var connectionString = Environment.GetEnvironmentVariable("TEST_CSM_ORGID_AUTHENTICATION");
-            var split = (connectionString ?? string.Empty)
-                .Split(';')
-                .SelectMany(s => {
-                    var p = s.IndexOf('=');
-                    return p <= 0 
-                        ? new Tuple<string, string>[] { }
-                        : new[] { Tuple.Create(s.Substring(0, p), s.Substring(p + 1)) };
-                })
-                .ToArray();
-
             var @params = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramsStr);
-            @params["__reserved"] = new Reserved
-            {
-                credentials = new Credentials
-                {
-                    clientId = GetValue(split, "ServicePrincipal"),
-                    tenantId = GetValue(split, "AADTenant"),
-                    secret = GetValue(split, "ServicePrincipalSecret"),
-                }
-            };
 
-            Result<object> response;
-            using(var process = StartProcess())
-            {
-                try
-                {
-                    var remoteServer = new RemoteServer(process.CreateIo(), new Marshalling(null, null));
-                    response = await remoteServer.Call<Result<object>>(request.Method.Method, @params);
-                }
-                finally
-                {
-                    process.Kill();
-                }
-            }            
+            var response = await RemoteServerCall<Result<object>>(method, @params);  
             
             return new HttpResponseMessage(response.statusCode)
             {
