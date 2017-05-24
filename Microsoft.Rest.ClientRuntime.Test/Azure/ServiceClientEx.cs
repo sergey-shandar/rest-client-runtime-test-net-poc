@@ -7,6 +7,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public static class ServiceClientEx
     {
+        public static bool NewImplementation { get; set; } = true;
+
         public static async Task<AzureOperationResponse<R>> Call<T, R>(
             this T client,
             AzureRequest operation,
