@@ -20,7 +20,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             {
                 @params[p.Name] = p.Value;
             }
-            var response = await HttpSendMock.RemoteServerCall<Response<R>>(request.Title + "." + request.Id, @params);
+            var method = request.Info.Title + "." + request.Info.Id;
+            var response = await HttpSendMock.RemoteServerCall<Response<R>>(method, @params);
             return new AzureOperationResponse<R>
             {
                 Body = response.result
@@ -35,7 +36,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         {
             var httpRequest = new HttpRequestMessage
             {
-                Method = new HttpMethod(request.Method),
+                Method = new HttpMethod(request.Info.Method),
                 RequestUri = request.BaseUri,
             };
             return new AzureOperationResponse<R>();

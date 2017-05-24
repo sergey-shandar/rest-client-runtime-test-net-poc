@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public class AzureParam
+    public sealed class AzureParam
     {
         public string Name { get; }
 
