@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
@@ -12,7 +10,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public string Method { get; }
 
-        public AzureRequestInfo(string title, string id, string method)
+        public IEnumerable<AzurePathPart> Path { get; }
+
+        public AzureRequestInfo(string title, string id, string method, IEnumerable<AzurePathPart> path)
         {
             Title = title;
             Id = id;
