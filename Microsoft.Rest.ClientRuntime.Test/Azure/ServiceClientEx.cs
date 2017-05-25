@@ -1,6 +1,8 @@
 ﻿using Microsoft.Rest.Azure;
 using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,7 +20,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             @params["subscriptionId"] = request.SubscriptionId;
             foreach (var p in request.ParamList)
             {
-                @params[p.Name] = p.Value;
+                @params[p.Info.Name] = p.Value;
             }
             var method = request.Info.Title + "." + request.Info.Id;
             var response = await HttpSendMock.RemoteServerCall<Response<R>>(method, @params);
@@ -27,6 +29,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 Body = response.result
             };
         }
+
+        private static string GetUrlParam(this AzureRequest request, string name)
+            => Uri.EscapeDataString(request.ParamList.First(v => v.Info.Name == name).Value.ToString());
+
+        private static string GetPath(this AzureRequest request)
+            => request.Info.Path
+                .Select(p => p.IsParam ? request.GetUrlParam(p.Value) : p.Value)
+                .Aggregate((a, b) => a + b);
 
         private static async Task<AzureOperationResponse<R>> HttpCall<T, R>(
             this T client,
@@ -37,9 +47,13 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var httpRequest = new HttpRequestMessage
             {
                 Method = new HttpMethod(request.Info.Method),
-                RequestUri = request.BaseUri,
+                RequestUri = new Uri(request.BaseUri, request.GetPath()),
             };
-            return new AzureOperationResponse<R>();
+            var response = await client.HttpClient.SendAsync(httpRequest);
+            return new AzureOperationResponse<R>
+            {
+                // Body = response.Content
+            };
         }
 
         public static Task<AzureOperationResponse<R>> Call<T, R>(

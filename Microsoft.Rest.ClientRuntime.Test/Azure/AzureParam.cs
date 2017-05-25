@@ -2,13 +2,13 @@
 {
     public sealed class AzureParam
     {
-        public string Name { get; }
+        public AzureParamInfo Info { get; }
 
         public object Value { get; }
 
-        public AzureParam(string name, object value)
+        public AzureParam(AzureParamInfo info, object value)
         {
-            Name = name;
+            Info = info;
             Value = value;
         }
     }
