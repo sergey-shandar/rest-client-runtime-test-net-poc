@@ -1,9 +1,11 @@
 ﻿using Microsoft.Rest.Azure;
 using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
+using Microsoft.Rest.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
@@ -30,8 +32,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
+        private static string GetUriValue(this AzureParam param)
+            => Uri.EscapeDataString(param.Value.ToString());
+
         private static string GetUrlParam(this AzureRequest request, string name)
-            => Uri.EscapeDataString(request.ParamList.First(v => v.Info.Name == name).Value.ToString());
+            => request.ParamList.First(v => v.Info.Name == name).GetUriValue();
 
         private static string GetPath(this AzureRequest request)
             => request.Info.Path
@@ -44,15 +49,30 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Tag<AzureOperationResponse<R>> _)
             where T : ServiceClient<T>, IAzureClient
         {
+            var query = string.Join(
+                "&",
+                request.ParamList
+                    .Where(p => p.Info.Location == AzureParamLocation.Query)
+                    .Select(p => p.Info.Name + "=" + p.GetUriValue()));
+            if (query != string.Empty)
+            {
+                query = "?" + query;
+            }
+            var body = request.ParamList
+                .Where(p => p.Info.Location == AzureParamLocation.Body)
+                .Select(p => SafeJsonConvert.SerializeObject(p.Value, client.SerializationSettings))
+                .FirstOrDefault();
             var httpRequest = new HttpRequestMessage
             {
                 Method = new HttpMethod(request.Info.Method),
-                RequestUri = new Uri(request.BaseUri, request.GetPath()),
+                RequestUri = new Uri(request.BaseUri, request.GetPath() + query),
+                Content = new StringContent(body, Encoding.UTF8),
             };
             var response = await client.HttpClient.SendAsync(httpRequest);
+            var responseContent = await response.Content.ReadAsStringAsync();
             return new AzureOperationResponse<R>
             {
-                // Body = response.Content
+                Body = SafeJsonConvert.DeserializeObject<R>(responseContent, client.DeserializationSettings)
             };
         }
 
@@ -61,7 +81,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             AzureRequest request,
             Tag<AzureOperationResponse<R>> tag)
             where T : ServiceClient<T>, IAzureClient
-            => client.JsonRpcCall(request, tag);
+            // => client.JsonRpcCall(request, tag);
+            => client.HttpCall(request, tag);
 
         public static async Task<AzureOperationResponse> Call<T>(
             this T client,
