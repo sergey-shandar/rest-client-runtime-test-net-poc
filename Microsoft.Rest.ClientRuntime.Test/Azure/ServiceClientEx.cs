@@ -12,7 +12,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public static class ServiceClientEx
     {
-        private static async Task<AzureOperationResponse<R>> JsonRpcCall<T, R>(
+        private static async Task<AzureOperationResponse<R, H>> JsonRpcCall<T, R, H>(
             this T client,
             AzureRequest request,
             Tag<AzureOperationResponse<R>> _)
@@ -25,7 +25,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             }
             var method = request.Info.Title + "." + request.Info.Id;
             var response = await HttpSendMock.RemoteServerCall<Response<R>>(method, @params);
-            return new AzureOperationResponse<R>
+            return new AzureOperationResponse<R, H>
             {
                 Body = response.result
             };
@@ -42,10 +42,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 .Select(p => p.IsParam ? request.GetUrlParam(p.Value) : p.Value)
                 .Aggregate((a, b) => a + b);
 
-        private static async Task<AzureOperationResponse<R>> HttpCall<T, R>(
+        private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H>(
             this T client,
             AzureRequest request,
-            Tag<AzureOperationResponse<R>> _)
+            Tag<AzureOperationResponse<R, H>> _)
             where T : ServiceClient<T>, IAzureClient
         {
             var query = string.Join(
@@ -73,19 +73,32 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             }
             var response = await client.HttpClient.SendAsync(httpRequest);
             var responseContent = await response.Content.ReadAsStringAsync();
-            return new AzureOperationResponse<R>
+            return new AzureOperationResponse<R, H>
             {
                 Body = SafeJsonConvert.DeserializeObject<R>(responseContent, client.DeserializationSettings)
             };
         }
 
-        public static Task<AzureOperationResponse<R>> Call<T, R>(
+        public static Task<AzureOperationResponse<R, H>> Call<T, R, H>(
+            this T client,
+            AzureRequest request,
+            Tag<AzureOperationResponse<R, H>> tag)
+            where T : ServiceClient<T>, IAzureClient
+            // => client.JsonRpcCall(request, tag);
+            => client.HttpCall(request, tag);
+
+        public static async Task<AzureOperationResponse<R>> Call<T, R>(
             this T client,
             AzureRequest request,
             Tag<AzureOperationResponse<R>> tag)
             where T : ServiceClient<T>, IAzureClient
-            // => client.JsonRpcCall(request, tag);
-            => client.HttpCall(request, tag);
+        {
+            var result = await client.Call(request, new Tag<AzureOperationResponse<R, object>>());
+            return new AzureOperationResponse<R>
+            {
+                Body = result.Body
+            };
+        }
 
         public static async Task<AzureOperationResponse> Call<T>(
             this T client,
@@ -93,7 +106,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Tag<AzureOperationResponse> _)
             where T : ServiceClient<T>, IAzureClient
         {
-            await client.Call(request, new Tag<AzureOperationResponse<object>>());
+            await client.Call(request, new Tag<AzureOperationResponse<object, object>>());
             return new AzureOperationResponse();
         }
     }
