@@ -12,11 +12,20 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public IEnumerable<AzurePathPart> Path { get; }
 
-        public AzureRequestInfo(string title, string id, string method, IEnumerable<AzurePathPart> path)
+        public IEnumerable<AzureParam> ConstList { get; }
+
+        public AzureRequestInfo(
+            string title,
+            string id,
+            string method,
+            IEnumerable<AzurePathPart> path,
+            IEnumerable<AzureParam> constList)
         {
             Title = title;
             Id = id;
             Method = method;
+            Path = path;
+            ConstList = constList;
         }
     }
 }
