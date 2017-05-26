@@ -19,7 +19,6 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             where T : ServiceClient<T>, IAzureClient
         {
             var @params = new Dictionary<string, object>();
-            @params["subscriptionId"] = request.SubscriptionId;
             foreach (var p in request.ParamList)
             {
                 @params[p.Info.Name] = p.Value;
@@ -68,6 +67,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 RequestUri = new Uri(request.BaseUri, request.GetPath() + query),
                 Content = new StringContent(body, Encoding.UTF8),
             };
+            foreach (var p in request.ParamList.Where(p => p.Info.Location == AzureParamLocation.Header))
+            {
+                httpRequest.Headers.Add(p.Info.Name, p.Value.ToString());
+            }
             var response = await client.HttpClient.SendAsync(httpRequest);
             var responseContent = await response.Content.ReadAsStringAsync();
             return new AzureOperationResponse<R>
