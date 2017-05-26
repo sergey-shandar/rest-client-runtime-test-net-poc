@@ -100,6 +100,19 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
+        public static async Task<AzureOperationHeaderResponse<H>> Call<T, H>(
+            this T client,
+            AzureRequest request,
+            Tag<AzureOperationHeaderResponse<H>> tag)
+            where T : ServiceClient<T>, IAzureClient
+        {
+            var result = await client.Call(request, new Tag<AzureOperationResponse<object, H>>());
+            return new AzureOperationHeaderResponse<H>
+            {
+                Headers = result.Headers
+            };
+        }
+
         public static async Task<AzureOperationResponse> Call<T>(
             this T client,
             AzureRequest request,
