@@ -35,12 +35,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             => Uri.EscapeDataString(param.Value.ToString());
 
         private static string GetUrlParam(this AzureRequest request, string name)
-            => request.ParamList.First(v => v.Info.Name == name).GetUriValue();
+            => request.ConstAndParamList.First(v => v.Info.Name == name).GetUriValue();
+
+        public static string GetPath(this AzureRequest request, IEnumerable<AzurePathPart> path)
+           => path
+               .Select(p => p.IsParam ? request.GetUrlParam(p.Value) : p.Value)
+               .Aggregate((a, b) => a + b);
 
         private static string GetPath(this AzureRequest request)
-            => request.Info.Path
-                .Select(p => p.IsParam ? request.GetUrlParam(p.Value) : p.Value)
-                .Aggregate((a, b) => a + b);
+            => request.GetPath(request.Info.Path);
 
         private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H>(
             this T client,
@@ -48,31 +51,40 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Tag<AzureOperationResponse<R, H>> _)
             where T : ServiceClient<T>, IAzureClient
         {
+            var cpList = request.ConstAndParamList;
+
             var query = string.Join(
                 "&",
-                request.ParamList
+                cpList
                     .Where(p => p.Info.Location == AzureParamLocation.Query)
                     .Select(p => p.Info.Name + "=" + p.GetUriValue()));
+
             if (query != string.Empty)
             {
                 query = "?" + query;
             }
-            var body = request.ParamList
+
+            var body = cpList
                 .Where(p => p.Info.Location == AzureParamLocation.Body)
                 .Select(p => SafeJsonConvert.SerializeObject(p.Value, client.SerializationSettings))
                 .FirstOrDefault();
+
             var httpRequest = new HttpRequestMessage
             {
                 Method = new HttpMethod(request.Info.Method),
-                RequestUri = new Uri(request.BaseUri, request.GetPath() + query),
+                RequestUri = new Uri(request.GetBaseUri(), request.GetPath() + query),
                 Content = new StringContent(body, Encoding.UTF8),
             };
-            foreach (var p in request.ParamList.Where(p => p.Info.Location == AzureParamLocation.Header))
+
+            foreach (var p in cpList.Where(p => p.Info.Location == AzureParamLocation.Header))
             {
                 httpRequest.Headers.Add(p.Info.Name, p.Value.ToString());
             }
+
             var response = await client.HttpClient.SendAsync(httpRequest);
+
             var responseContent = await response.Content.ReadAsStringAsync();
+
             return new AzureOperationResponse<R, H>
             {
                 Body = SafeJsonConvert.DeserializeObject<R>(responseContent, client.DeserializationSettings)

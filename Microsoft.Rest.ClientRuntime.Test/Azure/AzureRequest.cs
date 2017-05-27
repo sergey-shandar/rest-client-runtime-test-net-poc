@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
@@ -6,13 +8,19 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         public AzureRequestInfo Info { get; }
 
-        public System.Uri BaseUri { get; }
+        public AzureBaseUri BaseUri { get; }
 
         public IEnumerable<AzureParam> ParamList { get; }
 
+        public IEnumerable<AzureParam> ConstAndParamList
+            => Info.ConstList.Concat(ParamList);
+
+        public Uri GetBaseUri()
+            => BaseUri.GetUri(this);
+
         public AzureRequest(
             AzureRequestInfo info,
-            System.Uri baseUri,
+            AzureBaseUri baseUri,
             IEnumerable<AzureParam> paramList)
         {
             Info = info;
