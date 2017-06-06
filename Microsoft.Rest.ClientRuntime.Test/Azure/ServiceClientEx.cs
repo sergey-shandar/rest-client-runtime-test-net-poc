@@ -45,7 +45,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         private static string GetPath(this AzureRequest request)
             => request.GetPath(request.Info.Path);
 
-        private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H>(
+        private static async Task<AzureOperationResponse<R, H>> HttpBeginCall<T, R, H>(
             this T client,
             AzureRequest request,
             Tag<AzureOperationResponse<R, H>> _)
@@ -91,11 +91,34 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
+        private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H>(
+            this T client,
+            AzureRequest request,
+            Tag<AzureOperationResponse<R, H>> _)            
+            where T : ServiceClient<T>, IAzureClient
+            where R : class
+            where H : class
+        {
+            var response = await client.HttpBeginCall(request, _);
+            if (request.Info.IsLongRunningOperation)
+            {                
+                return await client
+                    .GetPutOrPatchOperationResultAsync(response, request.CustomHeaders, request.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                return response;
+            }
+        }
+
         public static Task<AzureOperationResponse<R, H>> Call<T, R, H>(
             this T client,
             AzureRequest request,
             Tag<AzureOperationResponse<R, H>> tag)
             where T : ServiceClient<T>, IAzureClient
+            where R : class
+            where H : class
             // => client.JsonRpcCall(request, tag);
             => client.HttpCall(request, tag);
 
@@ -104,6 +127,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             AzureRequest request,
             Tag<AzureOperationResponse<R>> tag)
             where T : ServiceClient<T>, IAzureClient
+            where R : class
         {
             var result = await client.Call(request, new Tag<AzureOperationResponse<R, object>>());
             return new AzureOperationResponse<R>
@@ -117,6 +141,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             AzureRequest request,
             Tag<AzureOperationHeaderResponse<H>> tag)
             where T : ServiceClient<T>, IAzureClient
+            where H : class
         {
             var result = await client.Call(request, new Tag<AzureOperationResponse<object, H>>());
             return new AzureOperationHeaderResponse<H>
