@@ -133,7 +133,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var result = await client.Call(request, new Tag<AzureOperationResponse<R, object>>());
             return new AzureOperationResponse<R>
             {
-                Body = result.Body
+                Body = result.Body,
+                Response = result.Response                
             };
         }
 
@@ -147,7 +148,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var result = await client.Call(request, new Tag<AzureOperationResponse<object, H>>());
             return new AzureOperationHeaderResponse<H>
             {
-                Headers = result.Headers
+                Headers = result.Headers,
+                Response = result.Response,
             };
         }
 
