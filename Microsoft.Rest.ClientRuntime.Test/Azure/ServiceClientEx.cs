@@ -47,8 +47,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         private static async Task<AzureOperationResponse<R, H>> HttpBeginCall<T, R, H>(
             this T client,
-            AzureRequest request,
-            Tag<AzureOperationResponse<R, H>> _)
+            AzureRequest request)
             where T : ServiceClient<T>, IAzureClient
         {
             // null validation
@@ -123,13 +122,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H>(
             this T client,
-            AzureRequest request,
-            Tag<AzureOperationResponse<R, H>> _)            
+            AzureRequest request)            
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where H : class
         {
-            var response = await client.HttpBeginCall(request, _);
+            var response = await client.HttpBeginCall<T, R, H>(request);
             if (request.Info.IsLongRunningOperation)
             {                
                 return await client
@@ -142,27 +140,49 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             }
         }
 
-        public static Task<AzureOperationResponse<R, H>> Call<T, R, H>(
+        public static Task<AzureOperationResponse<R, H>> DispatchCall<T, R, H>(
             this T client,
-            AzureRequest request,
-            Tag<AzureOperationResponse<R, H>> tag)
+            AzureRequest request)
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where H : class
             // => client.JsonRpcCall(request, tag);
-            => client.HttpCall(request, tag);
+            => client.HttpCall<T, R, H>(request);
 
-        public static async Task<AzureOperationResponse<R>> Call<T, R>(
+        public static async Task<AzureOperationResponse<R, H>> Call<T, R, H, F>(
             this T client,
             AzureRequest request,
-            Tag<AzureOperationResponse<R>> tag)
+            Tag<AzureOperationResponse<R, H>> tag,
+            Tag<F> tagF)
             where T : ServiceClient<T>, IAzureClient
             where R : class
+            where H : class
+            where F : class, R
         {
-            var result = await client.Call(request, new Tag<AzureOperationResponse<R, object>>());
+            var result = await client.DispatchCall<T, F, H>(request);
+            return new AzureOperationResponse<R, H>
+            {
+                Headers = result.Headers,
+                Body = result.Body,
+                Request = result.Request,
+                Response = result.Response
+            };
+        }
+
+        public static async Task<AzureOperationResponse<R>> Call<T, R, F>(
+            this T client,
+            AzureRequest request,
+            Tag<AzureOperationResponse<R>> tag,
+            Tag<F> tagF)
+            where T : ServiceClient<T>, IAzureClient
+            where R : class
+            where F : class, R
+        {
+            var result = await client.DispatchCall<T, F, object>(request);
             return new AzureOperationResponse<R>
             {
                 Body = result.Body,
+                Request = result.Request,
                 Response = result.Response                
             };
         }
@@ -174,10 +194,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             where T : ServiceClient<T>, IAzureClient
             where H : class
         {
-            var result = await client.Call(request, new Tag<AzureOperationResponse<object, H>>());
+            var result = await client.DispatchCall<T, object, H>(request);
             return new AzureOperationHeaderResponse<H>
             {
                 Headers = result.Headers,
+                Request = result.Request,
                 Response = result.Response,
             };
         }
@@ -188,8 +209,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Tag<AzureOperationResponse> _)
             where T : ServiceClient<T>, IAzureClient
         {
-            await client.Call(request, new Tag<AzureOperationResponse<object, object>>());
-            return new AzureOperationResponse();
+            var result = await client.DispatchCall<T, object, object>(request);
+            return new AzureOperationResponse()
+            {
+                Request = result.Request,
+                Response = result.Response
+            };
         }
     }
 }
