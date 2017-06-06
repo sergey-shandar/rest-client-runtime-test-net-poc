@@ -54,9 +54,16 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             // null validation
             foreach (var p in request.ParamList)
             {
-                if (p.Info.IsRequired && p.Value == null)
+                if (p.Value == null)
                 {
-                    throw new ValidationException(ValidationRules.CannotBeNull, p.Info.Name);
+                    if (p.Info.IsRequired)
+                    {
+                        throw new ValidationException(ValidationRules.CannotBeNull, p.Info.Name);
+                    }
+                }
+                else
+                {
+                    p.Info.Type.Validate(p);
                 }
             }
 
