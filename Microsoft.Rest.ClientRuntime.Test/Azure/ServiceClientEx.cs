@@ -92,7 +92,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             {
                 Method = new HttpMethod(request.Info.Method),
                 RequestUri = new Uri(request.GetBaseUri(), request.GetPath() + query),
-                Content = new StringContent(body, Encoding.UTF8),
+                Content = body == null ? null : new StringContent(body, Encoding.UTF8),
             };
 
             foreach (var p in cpList.Where(p => p.Info.Location == AzureParamLocation.Header))
