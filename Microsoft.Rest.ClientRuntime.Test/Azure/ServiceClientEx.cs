@@ -83,7 +83,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 query = "?" + query;
             }
 
-            var body = cpList
+            var requestContent = cpList
                 .Where(p => p.Info.Location == AzureParamLocation.Body)
                 .Select(p => SafeJsonConvert.SerializeObject(p.Value, client.SerializationSettings))
                 .FirstOrDefault();
@@ -92,7 +92,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             {
                 Method = new HttpMethod(request.Info.Method),
                 RequestUri = new Uri(request.GetBaseUri(), request.GetPath() + query),
-                Content = body == null ? null : new StringContent(body, Encoding.UTF8),
+                Content = requestContent == null ? null : new StringContent(requestContent, Encoding.UTF8),
             };
 
             foreach (var p in cpList.Where(p => p.Info.Location == AzureParamLocation.Header))
@@ -100,15 +100,24 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 httpRequest.Headers.Add(p.Info.Name, p.Value.ToString());
             }
 
-            var response = await client.HttpClient.SendAsync(httpRequest);
+            var httpResponse = await client.HttpClient.SendAsync(httpRequest);
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await httpResponse.Content.ReadAsStringAsync();
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                throw new CloudException(string.Format("Operation returned an invalid status code '{0}'", httpResponse.StatusCode))
+                {
+                    Request = new HttpRequestMessageWrapper(httpRequest, requestContent),
+                    Response = new HttpResponseMessageWrapper(httpResponse, responseContent)
+                };
+            }
 
             return new AzureOperationResponse<R, H>
             {
                 Body = SafeJsonConvert.DeserializeObject<R>(responseContent, client.DeserializationSettings),
                 Request = httpRequest,
-                Response = response,
+                Response = httpResponse,
             };
         }
 
