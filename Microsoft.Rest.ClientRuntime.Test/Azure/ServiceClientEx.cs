@@ -51,6 +51,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Tag<AzureOperationResponse<R, H>> _)
             where T : ServiceClient<T>, IAzureClient
         {
+            // null validation
+            foreach (var p in request.ParamList)
+            {
+                if (p.Info.IsRequired && p.Value == null)
+                {
+                    throw new ValidationException(ValidationRules.CannotBeNull, p.Info.Name);
+                }
+            }
+
             var cpList = request.ConstAndParamList;
 
             var query = string.Join(

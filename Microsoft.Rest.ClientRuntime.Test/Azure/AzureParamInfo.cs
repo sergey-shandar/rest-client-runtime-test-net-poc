@@ -6,10 +6,13 @@
 
         public AzureParamLocation Location { get; }
 
-        public AzureParamInfo(string name, AzureParamLocation location)
+        public bool IsRequired { get; }
+
+        public AzureParamInfo(string name, AzureParamLocation location, bool isRequired)
         {
             Name = name;
             Location = location;
+            IsRequired = isRequired;
         }
     }
 }
