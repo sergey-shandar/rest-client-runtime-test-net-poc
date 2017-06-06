@@ -87,7 +87,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
             return new AzureOperationResponse<R, H>
             {
-                Body = SafeJsonConvert.DeserializeObject<R>(responseContent, client.DeserializationSettings)
+                Body = SafeJsonConvert.DeserializeObject<R>(responseContent, client.DeserializationSettings),
+                Response = response,
             };
         }
 
