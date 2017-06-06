@@ -1,6 +1,4 @@
-﻿using Microsoft.Rest.ClientRuntime.Test.Azure.Types;
-
-namespace Microsoft.Rest.ClientRuntime.Test.Azure
+﻿namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public sealed class AzureParamInfo
     {
@@ -8,20 +6,20 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public AzureParamLocation Location { get; }
 
-        public AzureType Type { get; }
+        public AzureConstrain[] Constrains { get; }
 
         public bool IsRequired { get; }
 
         public AzureParamInfo(
             string name,
-            AzureParamLocation location,
-            AzureType type,
-            bool isRequired)
+            AzureParamLocation location,            
+            bool isRequired,
+            AzureConstrain[] constrains)
         {
             Name = name;
             Location = location;
-            Type = type;
             IsRequired = isRequired;
+            Constrains = constrains;
         }
     }
 }
