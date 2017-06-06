@@ -63,9 +63,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 }
                 else
                 {
-                    foreach (var c in p.Info.Constrains)
+                    foreach (var c in p.Info.Constraints)
                     {
-                        c.Validate(p.Value);
+                        c.Validate(p);
                     }
                 }
             }

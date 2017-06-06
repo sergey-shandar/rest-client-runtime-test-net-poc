@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Rest.ClientRuntime.Test.Azure
+﻿using Microsoft.Rest.ClientRuntime.Test.Azure.Constraints;
+
+namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public sealed class AzureParamInfo
     {
@@ -6,7 +8,7 @@
 
         public AzureParamLocation Location { get; }
 
-        public AzureConstrain[] Constrains { get; }
+        public AzureConstraint[] Constraints { get; }
 
         public bool IsRequired { get; }
 
@@ -14,12 +16,12 @@
             string name,
             AzureParamLocation location,            
             bool isRequired,
-            AzureConstrain[] constrains)
+            AzureConstraint[] constraints)
         {
             Name = name;
             Location = location;
             IsRequired = isRequired;
-            Constrains = constrains;
+            Constraints = constraints;
         }
     }
 }
