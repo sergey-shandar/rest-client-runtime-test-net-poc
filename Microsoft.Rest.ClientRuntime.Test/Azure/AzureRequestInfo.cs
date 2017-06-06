@@ -14,18 +14,22 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public IEnumerable<AzureParam> ConstList { get; }
 
+        public bool IsLongRunningOperation { get; }
+
         public AzureRequestInfo(
             string title,
             string id,
             string method,
             IEnumerable<AzurePathPart> path,
-            IEnumerable<AzureParam> constList)
+            IEnumerable<AzureParam> constList,
+            bool isLongRunningOperation)
         {
             Title = title;
             Id = id;
             Method = method;
             Path = path;
             ConstList = constList;
+            IsLongRunningOperation = isLongRunningOperation;
         }
     }
 }
