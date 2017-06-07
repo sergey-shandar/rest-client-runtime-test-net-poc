@@ -4,7 +4,21 @@ using System.Collections.Generic;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public sealed class AzureRequestInfo<E>
+    public interface IAzureRequestInfo
+    {
+        string Title { get; }
+        string Id { get; }
+
+        string Method { get; }
+
+        IEnumerable<AzurePathPart> Path { get; }
+
+        IEnumerable<AzureParam> ConstList { get; }
+
+        bool IsLongRunningOperation { get; }
+    }
+
+    public sealed class AzureRequestInfo<E> : IAzureRequestInfo
     {
         public string Title { get; }
 

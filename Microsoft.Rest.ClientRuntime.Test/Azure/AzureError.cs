@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Rest.ClientRuntime.Test.Azure
+﻿namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public sealed class AzureError<E>
     {

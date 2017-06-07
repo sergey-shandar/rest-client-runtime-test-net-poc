@@ -33,15 +33,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         private static string GetUriValue(this AzureParam param)
             => Uri.EscapeDataString(param.Value.ToString());
 
-        private static string GetUrlParam<E>(this AzureRequest<E> request, string name)
-            => request.ConstAndParamList.First(v => v.Info.Name == name).GetUriValue();
+        private static string GetUrlParam(this IAzureRequest request, string name)
+            => request.GetConstAndParamList().First(v => v.Info.Name == name).GetUriValue();
 
-        public static string GetPath<E>(this AzureRequest<E> request, IEnumerable<AzurePathPart> path)
+        public static string GetPath(this IAzureRequest request, IEnumerable<AzurePathPart> path)
            => path
                .Select(p => p.IsParam ? request.GetUrlParam(p.Value) : p.Value)
                .Aggregate((a, b) => a + b);
 
-        private static string GetPath<E>(this AzureRequest<E> request)
+        private static string GetPath(this IAzureRequest request)
             => request.GetPath(request.Info.Path);
 
         private static async Task<AzureOperationResponse<R, H>> HttpBeginCall<T, R, H, E>(
@@ -68,7 +68,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 }
             }
 
-            var cpList = request.ConstAndParamList;
+            var cpList = request.GetConstAndParamList();
 
             var query = string.Join(
                 "&",

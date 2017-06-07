@@ -13,7 +13,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Value = value;
         }
 
-        public override Uri GetUri<E>(AzureRequest<E> request)
+        public override Uri GetUri(IAzureRequest request)
             => Value;
     }
 }

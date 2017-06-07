@@ -5,9 +5,24 @@ using System.Threading;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public sealed class AzureRequest<E>
+    public interface IAzureRequest
+    {
+        IAzureRequestInfo Info { get; }
+
+        AzureBaseUri BaseUri { get; }
+
+        IEnumerable<AzureParam> ParamList { get; }
+
+        Dictionary<string, List<string>> CustomHeaders { get; }
+
+        CancellationToken CancellationToken { get; }
+    }
+
+    public sealed class AzureRequest<E> : IAzureRequest
     {
         public AzureRequestInfo<E> Info { get; }
+
+        IAzureRequestInfo IAzureRequest.Info => Info;
 
         public AzureBaseUri BaseUri { get; }
 
@@ -16,12 +31,6 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         public Dictionary<string, List<string>> CustomHeaders { get; }
 
         public CancellationToken CancellationToken { get; }
-
-        public IEnumerable<AzureParam> ConstAndParamList
-            => Info.ConstList.Concat(ParamList);
-
-        public Uri GetBaseUri()
-            => BaseUri.GetUri(this);
 
         public AzureRequest(
             AzureRequestInfo<E> info,
@@ -36,5 +45,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             CustomHeaders = customHeaders;
             CancellationToken = cancellationToken;
         }
+    }
+
+    public static class AzureRequestEx
+    {
+        public static IEnumerable<AzureParam> GetConstAndParamList(this IAzureRequest request)
+            => request.Info.ConstList.Concat(request.ParamList);
+
+        public static Uri GetBaseUri(this IAzureRequest request)
+            => request.BaseUri.GetUri(request);
     }
 }
