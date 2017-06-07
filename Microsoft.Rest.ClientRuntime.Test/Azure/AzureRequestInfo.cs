@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Rest.Azure;
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
@@ -16,12 +18,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public bool IsLongRunningOperation { get; }
 
+        public Func<string, CloudException> CreateException { get; }
+
         public AzureRequestInfo(
             string title,
             string id,
             string method,
             IEnumerable<AzurePathPart> path,
             IEnumerable<AzureParam> constList,
+            Func<string, CloudException> createException,
             bool isLongRunningOperation)
         {
             Title = title;
@@ -29,6 +34,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             Method = method;
             Path = path;
             ConstList = constList;
+            CreateException = createException;
             IsLongRunningOperation = isLongRunningOperation;
         }
     }
