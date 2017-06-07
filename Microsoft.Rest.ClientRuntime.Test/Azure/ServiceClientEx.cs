@@ -14,8 +14,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         private static async Task<AzureOperationResponse<R, H>> JsonRpcCall<T, R, H>(
             this T client,
-            AzureRequest request,
-            Tag<AzureOperationResponse<R>> _)
+            AzureRequest request)
             where T : ServiceClient<T>, IAzureClient
         {
             var @params = new Dictionary<string, object>();
@@ -146,8 +145,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where H : class
-            // => client.JsonRpcCall(request, tag);
-            => client.HttpCall<T, R, H>(request);
+            => string.IsNullOrWhiteSpace(HttpSendMock.GetProcessName()) 
+            ? client.HttpCall<T, R, H>(request) 
+            : client.JsonRpcCall<T, R, H>(request);
 
         public static async Task<AzureOperationResponse<R, H>> Call<T, R, H, F>(
             this T client,

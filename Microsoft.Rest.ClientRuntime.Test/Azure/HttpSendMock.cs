@@ -14,9 +14,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
     {
         public const string SdkRemoteServer = "SDK_REMOTE_SERVER";
 
+        public static string GetProcessName()
+            => Environment.GetEnvironmentVariable(SdkRemoteServer);
+
         public static Process StartProcess()
         {
-            var processName = Environment.GetEnvironmentVariable(SdkRemoteServer);
+            var processName = GetProcessName();
             if (string.IsNullOrWhiteSpace(processName))
             {
                 throw new Exception($"{SdkRemoteServer} is not specified.");
