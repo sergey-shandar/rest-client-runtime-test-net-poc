@@ -18,7 +18,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public bool IsLongRunningOperation { get; }
 
-        public Func<string, CloudException> CreateException { get; }
+        public Func<AzureError, RestException> CreateException { get; }
 
         public AzureRequestInfo(
             string title,
@@ -26,7 +26,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             string method,
             IEnumerable<AzurePathPart> path,
             IEnumerable<AzureParam> constList,
-            Func<string, CloudException> createException,
+            Func<AzureError, RestException> createException,
             bool isLongRunningOperation)
         {
             Title = title;

@@ -104,11 +104,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
             if (!httpResponse.IsSuccessStatusCode)
             {
-                var exception = request.Info.CreateException(
-                    string.Format("Operation returned an invalid status code '{0}'", httpResponse.StatusCode));
-                exception.Request = new HttpRequestMessageWrapper(httpRequest, requestContent);
-                exception.Response = new HttpResponseMessageWrapper(httpResponse, responseContent);
-                throw exception;
+                throw request.Info.CreateException(new AzureError(
+                    string.Format("Operation returned an invalid status code '{0}'", httpResponse.StatusCode),
+                    new HttpRequestMessageWrapper(httpRequest, requestContent),
+                    new HttpResponseMessageWrapper(httpResponse, responseContent)));
             }
 
             return new AzureOperationResponse<R, H>
