@@ -74,7 +74,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var query = string.Join(
                 "&",
                 cpList
-                    .Where(p => p.Info.Location == AzureParamLocation.Query)
+                    .Where(p => p.Info.Location == AzureParamLocation.Query && p.Value != null)
                     .Select(p => p.Info.Name + "=" + p.GetUriValue()));
 
             if (query != string.Empty)
