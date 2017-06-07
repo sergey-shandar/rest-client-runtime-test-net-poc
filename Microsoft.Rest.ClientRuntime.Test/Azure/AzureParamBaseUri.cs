@@ -13,7 +13,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             PartList = partList;
         }
 
-        public override Uri GetUri(AzureRequest request)
+        public override Uri GetUri<E>(AzureRequest<E> request)
             => new Uri(request.GetPath(PartList));
     }
 }

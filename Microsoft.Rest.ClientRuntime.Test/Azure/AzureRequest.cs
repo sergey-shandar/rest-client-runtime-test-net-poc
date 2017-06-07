@@ -5,9 +5,9 @@ using System.Threading;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public sealed class AzureRequest
+    public sealed class AzureRequest<E>
     {
-        public AzureRequestInfo Info { get; }
+        public AzureRequestInfo<E> Info { get; }
 
         public AzureBaseUri BaseUri { get; }
 
@@ -24,7 +24,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             => BaseUri.GetUri(this);
 
         public AzureRequest(
-            AzureRequestInfo info,
+            AzureRequestInfo<E> info,
             AzureBaseUri baseUri,
             IEnumerable<AzureParam> paramList,
             Dictionary<string, List<string>> customHeaders,

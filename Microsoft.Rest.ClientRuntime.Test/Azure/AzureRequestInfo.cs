@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
-    public sealed class AzureRequestInfo
+    public sealed class AzureRequestInfo<E>
     {
         public string Title { get; }
 
@@ -18,7 +18,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public bool IsLongRunningOperation { get; }
 
-        public Func<AzureError, RestException> CreateException { get; }
+        public Func<AzureError<E>, RestException> CreateException { get; }
 
         public AzureRequestInfo(
             string title,
@@ -26,7 +26,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             string method,
             IEnumerable<AzurePathPart> path,
             IEnumerable<AzureParam> constList,
-            Func<AzureError, RestException> createException,
+            Func<AzureError<E>, RestException> createException,
             bool isLongRunningOperation)
         {
             Title = title;

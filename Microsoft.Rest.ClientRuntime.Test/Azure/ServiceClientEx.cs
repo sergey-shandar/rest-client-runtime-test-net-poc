@@ -12,9 +12,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 {
     public static class ServiceClientEx
     {
-        private static async Task<AzureOperationResponse<R, H>> JsonRpcCall<T, R, H>(
+        private static async Task<AzureOperationResponse<R, H>> JsonRpcCall<T, R, H, E>(
             this T client,
-            AzureRequest request)
+            AzureRequest<E> request)
             where T : ServiceClient<T>, IAzureClient
         {
             var @params = new Dictionary<string, object>();
@@ -33,20 +33,20 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         private static string GetUriValue(this AzureParam param)
             => Uri.EscapeDataString(param.Value.ToString());
 
-        private static string GetUrlParam(this AzureRequest request, string name)
+        private static string GetUrlParam<E>(this AzureRequest<E> request, string name)
             => request.ConstAndParamList.First(v => v.Info.Name == name).GetUriValue();
 
-        public static string GetPath(this AzureRequest request, IEnumerable<AzurePathPart> path)
+        public static string GetPath<E>(this AzureRequest<E> request, IEnumerable<AzurePathPart> path)
            => path
                .Select(p => p.IsParam ? request.GetUrlParam(p.Value) : p.Value)
                .Aggregate((a, b) => a + b);
 
-        private static string GetPath(this AzureRequest request)
+        private static string GetPath<E>(this AzureRequest<E> request)
             => request.GetPath(request.Info.Path);
 
-        private static async Task<AzureOperationResponse<R, H>> HttpBeginCall<T, R, H>(
+        private static async Task<AzureOperationResponse<R, H>> HttpBeginCall<T, R, H, E>(
             this T client,
-            AzureRequest request)
+            AzureRequest<E> request)
             where T : ServiceClient<T>, IAzureClient
         {
             // null validation
@@ -104,10 +104,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
             if (!httpResponse.IsSuccessStatusCode)
             {
-                throw request.Info.CreateException(new AzureError(
+                throw request.Info.CreateException(new AzureError<E>(
                     string.Format("Operation returned an invalid status code '{0}'", httpResponse.StatusCode),
                     new HttpRequestMessageWrapper(httpRequest, requestContent),
-                    new HttpResponseMessageWrapper(httpResponse, responseContent)));
+                    new HttpResponseMessageWrapper(httpResponse, responseContent),
+                    SafeJsonConvert.DeserializeObject<E>(responseContent, client.DeserializationSettings)));
             }
 
             return new AzureOperationResponse<R, H>
@@ -118,14 +119,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
-        private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H>(
+        private static async Task<AzureOperationResponse<R, H>> HttpCall<T, R, H, E>(
             this T client,
-            AzureRequest request)            
+            AzureRequest<E> request)            
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where H : class
         {
-            var response = await client.HttpBeginCall<T, R, H>(request);
+            var response = await client.HttpBeginCall<T, R, H, E>(request);
             if (request.Info.IsLongRunningOperation)
             {                
                 return await client
@@ -138,19 +139,19 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             }
         }
 
-        public static Task<AzureOperationResponse<R, H>> DispatchCall<T, R, H>(
+        public static Task<AzureOperationResponse<R, H>> DispatchCall<T, R, H, E>(
             this T client,
-            AzureRequest request)
+            AzureRequest<E> request)
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where H : class
             => string.IsNullOrWhiteSpace(HttpSendMock.GetProcessName()) 
-            ? client.HttpCall<T, R, H>(request) 
-            : client.JsonRpcCall<T, R, H>(request);
+            ? client.HttpCall<T, R, H, E>(request) 
+            : client.JsonRpcCall<T, R, H, E>(request);
 
-        public static async Task<AzureOperationResponse<R, H>> Call<T, R, H, F>(
+        public static async Task<AzureOperationResponse<R, H>> Call<T, R, H, F, E>(
             this T client,
-            AzureRequest request,
+            AzureRequest<E> request,
             Tag<AzureOperationResponse<R, H>> tag,
             Tag<F> tagF)
             where T : ServiceClient<T>, IAzureClient
@@ -158,7 +159,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             where H : class
             where F : class, R
         {
-            var result = await client.DispatchCall<T, F, H>(request);
+            var result = await client.DispatchCall<T, F, H, E>(request);
             return new AzureOperationResponse<R, H>
             {
                 Headers = result.Headers,
@@ -168,16 +169,16 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
-        public static async Task<AzureOperationResponse<R>> Call<T, R, F>(
+        public static async Task<AzureOperationResponse<R>> Call<T, R, F, E>(
             this T client,
-            AzureRequest request,
+            AzureRequest<E> request,
             Tag<AzureOperationResponse<R>> tag,
             Tag<F> tagF)
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where F : class, R
         {
-            var result = await client.DispatchCall<T, F, object>(request);
+            var result = await client.DispatchCall<T, F, object, E>(request);
             return new AzureOperationResponse<R>
             {
                 Body = result.Body,
@@ -186,14 +187,14 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
-        public static async Task<AzureOperationHeaderResponse<H>> Call<T, H>(
+        public static async Task<AzureOperationHeaderResponse<H>> Call<T, H, E>(
             this T client,
-            AzureRequest request,
+            AzureRequest<E> request,
             Tag<AzureOperationHeaderResponse<H>> tag)
             where T : ServiceClient<T>, IAzureClient
             where H : class
         {
-            var result = await client.DispatchCall<T, object, H>(request);
+            var result = await client.DispatchCall<T, object, H, E>(request);
             return new AzureOperationHeaderResponse<H>
             {
                 Headers = result.Headers,
@@ -202,13 +203,13 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
-        public static async Task<AzureOperationResponse> Call<T>(
+        public static async Task<AzureOperationResponse> Call<T, E>(
             this T client,
-            AzureRequest request,
+            AzureRequest<E> request,
             Tag<AzureOperationResponse> _)
             where T : ServiceClient<T>, IAzureClient
         {
-            var result = await client.DispatchCall<T, object, object>(request);
+            var result = await client.DispatchCall<T, object, object, E>(request);
             return new AzureOperationResponse()
             {
                 Request = result.Request,
