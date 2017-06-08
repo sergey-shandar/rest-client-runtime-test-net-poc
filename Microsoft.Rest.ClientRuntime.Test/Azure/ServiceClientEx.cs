@@ -30,8 +30,11 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             };
         }
 
+        private static string GetHttpString(this AzureParam param)
+            => param.Value is bool b ? (b ? "true" : "false") : param.Value.ToString();
+
         private static string GetUriValue(this AzureParam param)
-            => Uri.EscapeDataString(param.Value.ToString());
+            => Uri.EscapeDataString(param.GetHttpString());
 
         private static string GetUrlParam(this IAzureRequest request, string name)
             => request.GetConstAndParamList().First(v => v.Info.Name == name).GetUriValue();
@@ -98,7 +101,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
             foreach (var p in cpList.Where(p => p.Info.Location == AzureParamLocation.Header))
             {
-                httpRequest.Headers.Add(p.Info.Name, p.Value.ToString());
+                httpRequest.Headers.Add(p.Info.Name, p.GetHttpString());
             }
 
             var httpResponse = await client.HttpClient.LogAndSendAsync(httpRequest);
