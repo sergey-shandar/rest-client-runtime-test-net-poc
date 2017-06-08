@@ -1,4 +1,5 @@
 ﻿using Microsoft.Rest.Azure;
+using Microsoft.Rest.Azure.OData;
 using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
 using Microsoft.Rest.Serialization;
 using System;
@@ -35,6 +36,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         private static string GetUriValue(this AzureParam param)
             => Uri.EscapeDataString(param.GetHttpString());
+
+        private static string GetQueryParam(this AzureParam param)
+            => param.Value.GetType().GetGenericTypeDefinition() == typeof(ODataQuery<>) ? param.Value.ToString()
+                : param.Info.Name + "=" + param.GetUriValue();
 
         private static string GetUrlParam(this IAzureRequest request, string name)
             => request.GetConstAndParamList().First(v => v.Info.Name == name).GetUriValue();
@@ -80,7 +85,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 "&",
                 cpList
                     .Where(p => p.Info.Location == AzureParamLocation.Query && p.Value != null)
-                    .Select(p => p.Info.Name + "=" + p.GetUriValue()));
+                    .Select(GetQueryParam));
 
             if (query != string.Empty)
             {
