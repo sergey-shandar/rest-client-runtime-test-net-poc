@@ -44,6 +44,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         private static string GetPath(this IAzureRequest request)
             => request.GetPath(request.Info.Path);
 
+        private static Task<HttpResponseMessage> LogAndSendAsync(this HttpClient client, HttpRequestMessage request)
+            => client.SendAsync(request);
+
         private static async Task<AzureOperationResponse<R, H>> HttpBeginCall<T, R, H, E>(
             this T client,
             AzureRequest<E> request)
@@ -98,7 +101,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 httpRequest.Headers.Add(p.Info.Name, p.Value.ToString());
             }
 
-            var httpResponse = await client.HttpClient.SendAsync(httpRequest);
+            var httpResponse = await client.HttpClient.LogAndSendAsync(httpRequest);
 
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
