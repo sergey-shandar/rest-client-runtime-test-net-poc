@@ -38,8 +38,12 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             => Uri.EscapeDataString(param.GetHttpString());
 
         private static string GetQueryParam(this AzureParam param)
-            => param.Value.GetType().GetGenericTypeDefinition() == typeof(ODataQuery<>) ? param.Value.ToString()
+        {
+            var paramType = param.Value.GetType();
+            return paramType.IsConstructedGenericType && paramType.GetGenericTypeDefinition() == typeof(ODataQuery<>)
+                ? param.Value.ToString()
                 : param.Info.Name + "=" + param.GetUriValue();
+        }
 
         private static string GetUrlParam(this IAzureRequest request, string name)
             => request.GetConstAndParamList().First(v => v.Info.Name == name).GetUriValue();
