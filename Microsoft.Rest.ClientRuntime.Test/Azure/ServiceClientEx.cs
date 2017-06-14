@@ -160,9 +160,19 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             where T : ServiceClient<T>, IAzureClient
             where R : class
             where H : class
-            => string.IsNullOrWhiteSpace(HttpSendMock.GetProcessName()) 
-            ? client.HttpCall<T, R, H, E>(request) 
-            : client.JsonRpcCall<T, R, H, E>(request);
+        {
+            var processName = HttpSendMock.GetProcessName();
+            if (string.IsNullOrWhiteSpace(processName))
+            {
+                Console.WriteLine($"Operation {request.Info.Id} sent to HTTP");
+                return client.HttpCall<T, R, H, E>(request);
+            }
+            else
+            {
+                Console.WriteLine($"Operation {request.Info.Id} sent to {processName}");
+                return client.JsonRpcCall<T, R, H, E>(request);
+            }
+        }
 
         public static async Task<AzureOperationResponse<R, H>> Call<T, R, H, F, E>(
             this T client,
