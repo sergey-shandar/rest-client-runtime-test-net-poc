@@ -24,7 +24,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 @params[p.Info.Name] = p.Value;
             }
             var method = request.Info.Title + "." + request.Info.Id;
-            var response = await HttpSendMock.RemoteServerCall<Response<R>>(method, @params);
+            var response = await HttpSendMock.RemoteServerCall<Response<R>>(
+                new Marshalling(client.SerializationSettings, client.DeserializationSettings),
+                method,
+                @params);
             return new AzureOperationResponse<R, H>
             {
                 Body = response.result
