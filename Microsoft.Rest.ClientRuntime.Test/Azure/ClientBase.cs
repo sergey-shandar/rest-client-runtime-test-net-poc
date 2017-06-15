@@ -17,22 +17,25 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             _Credentials = credentials;
         }
 
-        public async Task<AzureOperationResponse<I>> Call<I, C>(
+        /*
+        public async Task<AzureOperationResponse<I>> Call<I, C, E>(
             string method, Dictionary<string, object> @params)
             where C : I
         {
             @params["subscriptionId"] = SubscriptionId;
             @params["__reserved"] = new Reserved
             {
-                credentials = _Credentials
+                credentials = _Credentials,
+                httpResponse = true,
             };
-            var result = await _Server.Call<Result<C>>("Server." + method, @params);
+            var result = await _Server.Call<Result<C>, Result<E>>("Server." + method, @params);
             return new AzureOperationResponse<I> { Body = result.response };
         }
 
         public async Task<AzureOperationResponse<I>> Call<I>(
             string method, Dictionary<string, object> @params)
             => await Call<I, I>(method, @params);
+            */
 
         public string SubscriptionId { get; set; }
     }

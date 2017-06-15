@@ -27,7 +27,7 @@ namespace UnitTest2.JsonRpc
             var server = new RemoteServer(new Io(reader, writer), marshalling);
 
             var @params = new Dictionary<string, object>();
-            var result = await server.Call<string>("somemethod", @params);
+            var result = await server.Call<string, object>("somemethod", @params);
 
             Assert.AreEqual("abc", result);
 

@@ -34,15 +34,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
         {
         }
 
-        public async Task<T> Call<T>(string method, Dictionary<string, object> @params)
+        public async Task<T> Call<T, E>(string method, Dictionary<string, object> @params)
         {
             var request = new Request(i.ToString(), method, @params);
             await _Io.Writer.WriteMessageAsync(_Marshalling, request);
             ++i;
-            Response<T> response;
+            Response<T, E> response;
             while (true)
             {
-                response = await _Io.Reader.ReadMessageAsync<Response<T>>(_Marshalling);
+                response = await _Io.Reader.ReadMessageAsync<Response<T, E>>(_Marshalling);
                 if (response != null)
                 {
                     break;
@@ -51,7 +51,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
             if (response.error != null)
             {
                 request.@params.Remove("__reserved");
-                throw new ErrorException(method, _Marshalling.Serialize(request), response.error);
+                throw new ErrorException<E>(method, _Marshalling.Serialize(request), response.error);
             }
             return response.result;
         }

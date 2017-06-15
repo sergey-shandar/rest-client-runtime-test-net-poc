@@ -48,7 +48,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
         public static string GetValue(IEnumerable<Tuple<string, string>> array, string key)
             => array.FirstOrDefault(s => s.Item1 == key)?.Item2;
 
-        public static async Task<R> RemoteServerCall<R>(Marshalling marshalling, string method, Dictionary<string, object> @params)
+        public static async Task<R> RemoteServerCall<R, E>(
+            Marshalling marshalling, string method, Dictionary<string, object> @params)
         {
             // Parse Connection String
             // for example:
@@ -79,7 +80,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 try
                 {
                     var remoteServer = new RemoteServer(process.CreateIo(), marshalling);
-                    return await remoteServer.Call<R>(method, @params);
+                    return await remoteServer.Call<R, E>(method, @params);
                 }
                 finally
                 {
@@ -111,7 +112,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
             var @params = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramsStr);
 
-            var response = await RemoteServerCall<Result<object>>(new Marshalling(null, null), method, @params);  
+            var response = await RemoteServerCall<Result<object>, object>(new Marshalling(null, null), method, @params);  
             
             return new HttpResponseMessage(response.statusCode)
             {

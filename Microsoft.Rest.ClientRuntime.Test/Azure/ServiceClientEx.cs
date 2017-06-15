@@ -26,7 +26,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var method = request.Info.Title + "." + request.Info.Id;
             try
             {
-                var result = await HttpSendMock.RemoteServerCall<Result<R>>(
+                var result = await HttpSendMock.RemoteServerCall<Result<R>, E>(
                     new Marshalling(client.SerializationSettings, client.DeserializationSettings),
                     method,
                     @params);
@@ -35,9 +35,9 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                     Body = result.response
                 };
             }
-            catch (ErrorException e)
+            catch (ErrorException<E> e)
             {
-                throw request.Info.CreateException(new AzureError<E>(e.Message, null, null, default(E)));
+                throw request.Info.CreateException(new AzureError<E>(e.Message, null, null, e.Error.data));
             }
         }
 

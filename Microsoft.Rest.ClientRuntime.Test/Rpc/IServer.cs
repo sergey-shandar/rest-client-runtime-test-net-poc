@@ -8,6 +8,6 @@ namespace Microsoft.Rest.ClientRuntime.Test.Rpc
     /// </summary>
     public interface IServer
     {
-        Task<T> Call<T>(string method, Dictionary<string, object> @params);
+        Task<T> Call<T, E>(string method, Dictionary<string, object> @params);
     }
 }

@@ -25,7 +25,7 @@ namespace TestServer
                     File.AppendAllLines(logPath, new[] { "Reading..." });
                     var request = await reader.ReadMessageAsync<Request>(marshalling);
                     File.AppendAllLines(logPath, new[] { $"Request: {request}" });
-                    await writer.WriteMessageAsync(marshalling, Response.Create("0", request, null));
+                    await writer.WriteMessageAsync(marshalling, Response.Create("0", request, null as Error<object>));
                 }
             }
             catch (Exception e)
