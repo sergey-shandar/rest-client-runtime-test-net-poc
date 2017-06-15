@@ -1,5 +1,6 @@
 ﻿using Microsoft.Rest.ClientRuntime.Test.Rpc;
 using Microsoft.Rest.ClientRuntime.Test.Utf8;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,7 +58,15 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
         }
 
         public static async Task<T> ReadMessageAsync<T>(this IReader reader, IMarshalling marshalling)
-            => marshalling.Deserialize<T>(await reader.ReadMessageAsync());
+        {
+            var result = await reader.ReadMessageAsync();
+            if (result != null)
+            {
+                Console.WriteLine("result:");
+                Console.WriteLine(result);
+            }
+            return marshalling.Deserialize<T>(result);
+        }
 
         public static Task WriteMessageAsync(
             this IWriter writer, IMarshalling marshalling, object value)
