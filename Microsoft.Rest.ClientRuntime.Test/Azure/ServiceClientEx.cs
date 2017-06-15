@@ -26,13 +26,13 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             var method = request.Info.Title + "." + request.Info.Id;
             try
             {
-                var response = await HttpSendMock.RemoteServerCall<Response<R>>(
+                var result = await HttpSendMock.RemoteServerCall<Result<R>>(
                     new Marshalling(client.SerializationSettings, client.DeserializationSettings),
                     method,
                     @params);
                 return new AzureOperationResponse<R, H>
                 {
-                    Body = response.result
+                    Body = result.response
                 };
             }
             catch (ErrorException e)
