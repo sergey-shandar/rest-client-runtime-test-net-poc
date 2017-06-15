@@ -24,14 +24,21 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 @params[p.Info.Name] = p.Value;
             }
             var method = request.Info.Title + "." + request.Info.Id;
-            var response = await HttpSendMock.RemoteServerCall<Response<R>>(
-                new Marshalling(client.SerializationSettings, client.DeserializationSettings),
-                method,
-                @params);
-            return new AzureOperationResponse<R, H>
+            try
             {
-                Body = response.result
-            };
+                var response = await HttpSendMock.RemoteServerCall<Response<R>>(
+                    new Marshalling(client.SerializationSettings, client.DeserializationSettings),
+                    method,
+                    @params);
+                return new AzureOperationResponse<R, H>
+                {
+                    Body = response.result
+                };
+            }
+            catch (ErrorException e)
+            {
+                throw request.Info.CreateException(new AzureError<E>(e.Message, null, null, default(E)));
+            }
         }
 
         private static string GetHttpString(this AzureParam param)
