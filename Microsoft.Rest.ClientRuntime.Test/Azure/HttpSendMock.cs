@@ -72,7 +72,8 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                     clientId = GetValue(split, "ServicePrincipal"),
                     tenantId = GetValue(split, "AADTenant"),
                     secret = GetValue(split, "ServicePrincipalSecret"),
-                }
+                },
+                httpResponse = true,
             };
 
             using (var process = StartProcess())
