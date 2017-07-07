@@ -14,18 +14,22 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public bool SkipUrlEncoding { get; }
 
+        public bool IsStream { get; }
+
         public AzureParamInfo(
             string name,
             AzureParamLocation location,            
-            bool isRequired,
-            AzureConstraint[] constraints,
-            bool skipUrlEncoding)
+            bool isRequired = false,
+            AzureConstraint[] constraints = null,
+            bool skipUrlEncoding = false,
+            bool isStream = false)
         {
             Name = name;
             Location = location;
             IsRequired = isRequired;
-            Constraints = constraints;
+            Constraints = constraints.DefaultIfNull();
             SkipUrlEncoding = skipUrlEncoding;
+            IsStream = isStream;
         }
     }
 }

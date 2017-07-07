@@ -3,8 +3,11 @@
     public sealed class AzureError<E>
     {
         public string Message { get; }
+
         public HttpRequestMessageWrapper Request { get; }
+
         public HttpResponseMessageWrapper Response { get; }
+
         public E Body { get; }
 
         public AzureError(

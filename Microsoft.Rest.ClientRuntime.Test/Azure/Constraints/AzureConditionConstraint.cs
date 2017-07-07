@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Rest.ClientRuntime.Test.Azure.Constraints
+﻿namespace Microsoft.Rest.ClientRuntime.Test.Azure.Constraints
 {
     public abstract class AzureConditionConstraint<T> : AzureConstraint
     {

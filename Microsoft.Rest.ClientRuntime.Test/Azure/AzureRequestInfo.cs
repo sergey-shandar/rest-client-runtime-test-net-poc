@@ -41,7 +41,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             IEnumerable<AzurePathPart> path,
             IEnumerable<AzureParam> constList,
             Func<AzureError<E>, RestException> createException,
-            bool isLongRunningOperation)
+            bool isLongRunningOperation = false)
         {
             Title = title;
             Id = id;
