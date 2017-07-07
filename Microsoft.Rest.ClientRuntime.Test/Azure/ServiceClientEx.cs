@@ -4,8 +4,10 @@ using Microsoft.Rest.ClientRuntime.Test.JsonRpc;
 using Microsoft.Rest.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -109,16 +111,32 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 query = "?" + query;
             }
 
-            var requestContent = cpList
+            var bodyParam = cpList
                 .Where(p => p.Info.Location == AzureParamLocation.Body)
-                .Select(p => SafeJsonConvert.SerializeObject(p.Value, client.SerializationSettings))
                 .FirstOrDefault();
+
+            HttpContent content;
+            string requestContent = null;
+            if (bodyParam.Info.IsStream)
+            {
+                content = new StreamContent((Stream)bodyParam.Value);
+                content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    "application/octet-stream");
+            }
+            else
+            {
+                requestContent = SafeJsonConvert.SerializeObject(
+                    bodyParam.Value, client.SerializationSettings);
+                content = requestContent == null 
+                    ? null 
+                    : new StringContent(requestContent, Encoding.UTF8);
+            }
 
             var httpRequest = new HttpRequestMessage
             {
                 Method = new HttpMethod(request.Info.Method),
                 RequestUri = new Uri(request.GetBaseUri(), request.GetPath() + query),
-                Content = requestContent == null ? null : new StringContent(requestContent, Encoding.UTF8),
+                Content = content,
             };
 
             foreach (var p in cpList.Where(p => p.Info.Location == AzureParamLocation.Header))
