@@ -115,7 +115,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
                 .Where(p => p.Info.Location == AzureParamLocation.Body)
                 .FirstOrDefault();
 
-            HttpContent content;
+            HttpContent content = null;
             string requestContent = null;
             if (bodyParam != null)
             {
