@@ -117,19 +117,22 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
             HttpContent content;
             string requestContent = null;
-            if (bodyParam.Info.IsStream)
+            if (bodyParam != null)
             {
-                content = new StreamContent((Stream)bodyParam.Value);
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-                    "application/octet-stream");
-            }
-            else
-            {
-                requestContent = SafeJsonConvert.SerializeObject(
-                    bodyParam.Value, client.SerializationSettings);
-                content = requestContent == null 
-                    ? null 
-                    : new StringContent(requestContent, Encoding.UTF8);
+                if (bodyParam.Info.IsStream)
+                {
+                    content = new StreamContent((Stream)bodyParam.Value);
+                    content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                        "application/octet-stream");
+                }
+                else
+                {
+                    requestContent = SafeJsonConvert.SerializeObject(
+                        bodyParam.Value, client.SerializationSettings);
+                    content = requestContent == null
+                        ? null
+                        : new StringContent(requestContent, Encoding.UTF8);
+                }
             }
 
             var httpRequest = new HttpRequestMessage
