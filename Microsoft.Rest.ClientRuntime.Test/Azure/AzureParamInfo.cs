@@ -12,16 +12,20 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
 
         public bool IsRequired { get; }
 
+        public bool SkipUrlEncoding { get; }
+
         public AzureParamInfo(
             string name,
             AzureParamLocation location,            
             bool isRequired,
-            AzureConstraint[] constraints)
+            AzureConstraint[] constraints,
+            bool skipUrlEncoding)
         {
             Name = name;
             Location = location;
             IsRequired = isRequired;
             Constraints = constraints;
+            SkipUrlEncoding = skipUrlEncoding;
         }
     }
 }

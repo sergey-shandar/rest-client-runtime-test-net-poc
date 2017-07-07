@@ -45,7 +45,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             => param.Value is bool b ? (b ? "true" : "false") : param.Value.ToString();
 
         private static string GetUriValue(this AzureParam param)
-            => Uri.EscapeDataString(param.GetHttpString());
+        {
+            var httpString = param.GetHttpString();
+            return param.Info.SkipUrlEncoding ? httpString : Uri.EscapeDataString(httpString);
+        }
 
         private static string GetQueryParam(this AzureParam param)
         {
