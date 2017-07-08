@@ -8,12 +8,13 @@
     <PackageLicenseUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc</RepositoryUrl>
-    <RepositoryType />
+    <RepositoryType>git</RepositoryType>
     <Copyright>Microsoft</Copyright>
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
   </PropertyGroup>
 
   <ItemGroup>
