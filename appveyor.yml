@@ -4,7 +4,9 @@ configuration: Debug
 nuget:
   disable_publish_on_pr: true
 before_build:
-- cmd: nuget restore Microsoft.Rest.ClientRuntime.Test.sln
+- ps: nuget restore Microsoft.Rest.ClientRuntime.Test.sln
+after_build:
+- ps: .\nuget-rename.ps1
 build:
   verbosity: minimal
 artifacts:
