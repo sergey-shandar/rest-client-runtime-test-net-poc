@@ -50,7 +50,7 @@ namespace Microsoft.Rest.ClientRuntime.Test.TextRpc
         {
             var count = Encoding.UTF8.GetByteCount(message);
             await writer.WriteAsync(ContentLength);
-            await writer.WriteAsync(":");
+            await writer.WriteAsync(": ");
             await writer.WriteLineAsync(count.ToString());
             await writer.WriteLineAsync();
             await writer.WriteAsync(message);
