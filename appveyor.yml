@@ -1,11 +1,13 @@
-version: 1.0.{build}
+version: 1.0.200.{build}
 image: Visual Studio 2017
-configuration: Release
+configuration: Debug
 nuget:
   disable_publish_on_pr: true
 before_build:
-- cmd: nuget restore Rest.ClientRuntime.Test/Rest.ClientRuntime.Test.sln
+- ps: nuget restore Microsoft.Rest.ClientRuntime.Test.sln
+after_build:
+- ps: .\nuget-rename.ps1
 build:
   verbosity: minimal
 artifacts:
-- path: Rest.ClientRuntime.Test/Rest.ClientRuntime.Test/bin/Release/Rest.ClientRuntime.Test.*.nupkg
+- path: Microsoft.Rest.ClientRuntime.Test/bin/Debug/Microsoft.Rest.ClientRuntime.Test.*.nupkg

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.5</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>$(appveyor_build_version)</Version>
+    <Description>REST API Client RunTime for .Net Test (Proof of concept)</Description>
+    <PackageLicenseUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sergey-shandar/rest-client-runtime-test-net-poc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Microsoft</Copyright>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.7" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure" Version="3.3.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
