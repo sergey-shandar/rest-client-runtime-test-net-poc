@@ -39,7 +39,10 @@ namespace Microsoft.Rest.ClientRuntime.Test.Azure
             }
             catch (ErrorException<E> e)
             {
-                throw request.Info.CreateException(new AzureError<E>(e.Message, null, null, e.Error.data));
+                throw request.Info.CreateException(new AzureError<E>(e.Message, 
+                                                                     null,
+                                                                     e.Error.HttpResponse != null ? new HttpResponseMessageWrapper(e.Error.HttpResponse, String.Empty) : null,
+                                                                     e.Error.data));
             }
         }
 
