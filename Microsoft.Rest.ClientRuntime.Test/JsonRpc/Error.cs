@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
+﻿using System.Net.Http;
+
+namespace Microsoft.Rest.ClientRuntime.Test.JsonRpc
 {
     public sealed class Error<E>
     {
@@ -7,5 +9,7 @@
         public string message { get; set; }
 
         public E data { get; set; } 
+
+        public HttpResponseMessage HttpResponse { get; set; }
     }
 }
